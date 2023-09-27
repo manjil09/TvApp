@@ -21,12 +21,20 @@ class MainFragment: BrowseSupportFragment() {
     private fun loadItems() {
         val rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
 
-        val gridItemPresenterHeader = HeaderItem(0, "GridItemPresenter")
-        val gridRowAdapter = ArrayObjectAdapter(GridItemPresenter())
-        gridRowAdapter.add("ITEM 1")
-        gridRowAdapter.add("ITEM 2")
-        gridRowAdapter.add("ITEM 3")
-        rowsAdapter.add(ListRow(gridItemPresenterHeader, gridRowAdapter))
+        val headerItem = HeaderItem(0, "ItemPresenter")
+        val headerItem1 = HeaderItem(1,"Second Header")
+        val rowItemAdapter = ArrayObjectAdapter(ItemPresenter())
+        rowItemAdapter.add("ITEM 1")
+        rowItemAdapter.add("ITEM 2")
+        rowItemAdapter.add("ITEM 3")
+
+
+        val cardItemAdapter = ArrayObjectAdapter(CardPresenter())
+        cardItemAdapter.add(Movie("First Title","Description for first title","https://storage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg"))
+
+
+        rowsAdapter.add(ListRow(headerItem, rowItemAdapter))
+        rowsAdapter.add(ListRow(headerItem1, cardItemAdapter))
         adapter = rowsAdapter
     }
 

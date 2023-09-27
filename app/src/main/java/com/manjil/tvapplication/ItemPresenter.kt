@@ -7,7 +7,7 @@ import androidx.leanback.widget.Presenter
 import androidx.leanback.widget.RowHeaderPresenter
 import com.manjil.tvapplication.databinding.GridItemBinding
 
-class GridItemPresenter: Presenter() {
+class ItemPresenter: Presenter() {
 
     class ViewHolder(val binding: GridItemBinding): RowHeaderPresenter.ViewHolder(binding.root)
 
