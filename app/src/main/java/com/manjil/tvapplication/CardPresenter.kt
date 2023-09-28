@@ -1,9 +1,11 @@
 package com.manjil.tvapplication
 
 import android.view.ViewGroup
+import androidx.leanback.widget.BaseCardView
 import androidx.leanback.widget.ImageCardView
 import androidx.leanback.widget.Presenter
 import com.bumptech.glide.Glide
+import com.manjil.tvapplication.model.Movie
 
 class CardPresenter: Presenter() {
     /**
@@ -25,6 +27,7 @@ class CardPresenter: Presenter() {
 
         cardView.titleText = movie.title
         cardView.contentText = movie.description
+        cardView.infoVisibility = BaseCardView.CARD_REGION_VISIBLE_SELECTED
         cardView.setMainImageDimensions(400,200)
         Glide.with(viewHolder.view.context)
             .load(movie.imageUrl)
