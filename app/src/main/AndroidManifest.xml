@@ -3,7 +3,6 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
-
     <uses-feature
         android:name="android.software.leanback"
         android:required="true" />
@@ -19,6 +18,9 @@
         android:logo="@drawable/app_icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.TVApplication">
+        <activity
+            android:name=".playbackPage.VideoPlaybackActivity"
+            android:exported="false" />
         <activity
             android:name=".detailsPage.DetailsActivity"
             android:exported="false" />

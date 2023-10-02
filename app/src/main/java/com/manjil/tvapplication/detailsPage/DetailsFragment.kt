@@ -1,10 +1,9 @@
 package com.manjil.tvapplication.detailsPage
 
+import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
-import android.widget.ImageView
-import androidx.core.content.ContextCompat
 import androidx.leanback.app.DetailsSupportFragment
 import androidx.leanback.widget.Action
 import androidx.leanback.widget.ArrayObjectAdapter
@@ -14,12 +13,13 @@ import androidx.leanback.widget.FullWidthDetailsOverviewRowPresenter
 import androidx.leanback.widget.HeaderItem
 import androidx.leanback.widget.ListRow
 import androidx.leanback.widget.ListRowPresenter
+import androidx.leanback.widget.OnActionClickedListener
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.manjil.tvapplication.CardPresenter
-import com.manjil.tvapplication.R
 import com.manjil.tvapplication.model.Movie
+import com.manjil.tvapplication.playbackPage.VideoPlaybackActivity
 import java.io.Serializable
 
 class DetailsFragment : DetailsSupportFragment() {
@@ -68,7 +68,6 @@ class DetailsFragment : DetailsSupportFragment() {
 
     private fun setupDetailsOverviewRow() {
         val row = DetailsOverviewRow(movie)
-        row.imageDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.default_background)
         Glide.with(requireActivity())
             .load(movie!!.imageUrl)
             .centerCrop()
@@ -89,12 +88,13 @@ class DetailsFragment : DetailsSupportFragment() {
         actionAdapter.add(
             Action(
                 0,
-                "Watch Trailer"
+                "Watch Trailer",
+                ""
             )
         )
         actionAdapter.add(
             Action(
-                2,
+                1,
                 "Buy Movie",
                 "$15.99"
             )
@@ -105,7 +105,13 @@ class DetailsFragment : DetailsSupportFragment() {
 
     private fun setupDetailsOverviewRowPresenter() {
         val detailsPresenter = FullWidthDetailsOverviewRowPresenter(DetailsDescriptionPresenter())
-
+        detailsPresenter.onActionClickedListener = OnActionClickedListener {
+            if (it.id == 0L){
+                val intent = Intent(requireContext(),VideoPlaybackActivity::class.java)
+                intent.putExtra("movie",movie)
+                startActivity(intent)
+            }
+        }
 //        detailsPresenter.backgroundColor = ContextCompat.getColor(requireContext(),R.color.fastlane_background)
         presenterSelector.addClassPresenter(DetailsOverviewRow::class.java, detailsPresenter)
     }
