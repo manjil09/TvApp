@@ -3,6 +3,7 @@ package com.manjil.tvapplication.playbackPage
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
+import androidx.leanback.app.BackgroundManager
 import com.manjil.tvapplication.R
 
 class VideoPlaybackActivity : FragmentActivity() {
