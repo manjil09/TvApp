@@ -55,13 +55,12 @@ class CustomSeekDataProvider(private val videoUrl: String, private val interval:
 
         try {
             retriever.setDataSource(videoUrl)
-            val time = mSeekPositions[index]
+            val time = mSeekPositions[index] * 1000
             return retriever.getFrameAtTime(time, MediaMetadataRetriever.OPTION_CLOSEST_SYNC)
         } catch (e: Exception) {
             e.printStackTrace()
             Log.d("TAG", "getThumbnail: exception at index $index")
-
-        } finally {
+        }finally {
             retriever.release()
         }
         return null
