@@ -43,7 +43,7 @@ class VideoPlaybackFragment : VideoSupportFragment() {
         playerGlue.addPlayerCallback(object : PlaybackGlue.PlayerCallback() {
             override fun onPreparedStateChanged(glue: PlaybackGlue?) {
                 if (glue!!.isPrepared) {
-                    playerGlue.seekProvider = CustomSeekDataProvider(videoUrl,20000L)
+                    playerGlue.seekProvider = CustomSeekDataProvider(requireContext(),videoUrl,20000L)
                     playerGlue.play()
                 }
             }
