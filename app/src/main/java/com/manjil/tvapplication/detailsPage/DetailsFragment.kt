@@ -14,6 +14,7 @@ import androidx.leanback.widget.HeaderItem
 import androidx.leanback.widget.ListRow
 import androidx.leanback.widget.ListRowPresenter
 import androidx.leanback.widget.OnActionClickedListener
+import androidx.leanback.widget.OnItemViewClickedListener
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
@@ -35,11 +36,23 @@ class DetailsFragment : DetailsSupportFragment() {
         setupDetailsOverviewRow()
         setupRelatedVideoRow()
         setupDetailsOverviewRowPresenter()
+        setupEventListeners()
         adapter = mAdapter
     }
 
+    private fun setupEventListeners() {
+        onItemViewClickedListener =
+            OnItemViewClickedListener { _, item, _, row ->
+                if (row.id == 0L) {
+                    val intent = Intent(requireContext(), DetailsActivity::class.java)
+                    intent.putExtra("movie", item as Movie)
+                    startActivity(intent)
+                }
+            }
+    }
+
     private fun setupRelatedVideoRow() {
-        val headerItem = HeaderItem("Related Videos")
+        val headerItem = HeaderItem(0, "Related Videos")
         val listRowAdapter = ArrayObjectAdapter(CardPresenter())
         listRowAdapter.add(
             Movie(
@@ -62,7 +75,7 @@ class DetailsFragment : DetailsSupportFragment() {
                 "https://storage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerEscapes.jpg"
             )
         )
-        mAdapter.add(ListRow(headerItem,listRowAdapter))
+        mAdapter.add(ListRow(headerItem, listRowAdapter))
         presenterSelector.addClassPresenter(ListRow::class.java, ListRowPresenter())
     }
 
@@ -74,7 +87,7 @@ class DetailsFragment : DetailsSupportFragment() {
             .into(object : CustomTarget<Drawable>() {
                 override fun onResourceReady(
                     resource: Drawable,
-                    transition: Transition<in Drawable>?
+                    transition: Transition<in Drawable>?,
                 ) {
                     row.imageDrawable = resource
                 }
@@ -106,9 +119,9 @@ class DetailsFragment : DetailsSupportFragment() {
     private fun setupDetailsOverviewRowPresenter() {
         val detailsPresenter = FullWidthDetailsOverviewRowPresenter(DetailsDescriptionPresenter())
         detailsPresenter.onActionClickedListener = OnActionClickedListener {
-            if (it.id == 0L){
-                val intent = Intent(requireContext(),VideoPlaybackActivity::class.java)
-                intent.putExtra("movie",movie)
+            if (it.id == 0L) {
+                val intent = Intent(requireContext(), VideoPlaybackActivity::class.java)
+                intent.putExtra("movie", movie)
                 startActivity(intent)
             }
         }

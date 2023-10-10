@@ -1,7 +1,6 @@
 package com.manjil.tvapplication.detailsPage
 
 import androidx.leanback.widget.AbstractDetailsDescriptionPresenter
-import com.manjil.tvapplication.R
 import com.manjil.tvapplication.model.Movie
 
 class DetailsDescriptionPresenter: AbstractDetailsDescriptionPresenter() {

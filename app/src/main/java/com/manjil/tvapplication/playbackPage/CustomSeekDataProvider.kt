@@ -2,8 +2,6 @@ package com.manjil.tvapplication.playbackPage
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.VectorDrawable
 import android.media.MediaMetadataRetriever
 import android.util.Log
@@ -16,21 +14,20 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-
 class CustomSeekDataProvider(private val context: Context, videoUrl: String, interval: Long) :
     PlaybackSeekDataProvider() {
-    private var mSeekPositions: LongArray
-    private var retriever = MediaMetadataRetriever()
-    private val thumbnailCache = HashMap<Int, Bitmap?>()
+    private val mSeekPositions: LongArray
+    private val retriever = MediaMetadataRetriever()
+    private val thumbnailCache: HashMap<Int, Bitmap?>
 
     init {
         retriever.setDataSource(videoUrl)
 
         val duration =
             retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)!!.toLong()
-
         val size: Int = ((duration / interval) + 1).toInt()
 
+        thumbnailCache = HashMap(size)
         mSeekPositions = LongArray(size)
         for (i in 0..<size) seekPositions[i] = i * interval
     }
@@ -70,7 +67,6 @@ class CustomSeekDataProvider(private val context: Context, videoUrl: String, int
     private fun loadThumbnailInBackground(index: Int): Bitmap? {
         try {
             val time = mSeekPositions[index] * 1000
-
             return retriever.getFrameAtTime(time, MediaMetadataRetriever.OPTION_CLOSEST_SYNC)
         } catch (e: Exception) {
             e.printStackTrace()

@@ -16,7 +16,6 @@ import androidx.leanback.widget.RowPresenter
 import com.manjil.tvapplication.detailsPage.DetailsActivity
 import com.manjil.tvapplication.model.Movie
 
-
 class MainFragment : BrowseSupportFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -103,7 +102,7 @@ class MainFragment : BrowseSupportFragment() {
             itemViewHolder: Presenter.ViewHolder?,
             item: Any?,
             rowViewHolder: RowPresenter.ViewHolder?,
-            row: Row?
+            row: Row?,
         ) {
 
         }
