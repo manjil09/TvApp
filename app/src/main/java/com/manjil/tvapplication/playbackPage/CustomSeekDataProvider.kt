@@ -64,6 +64,10 @@ class CustomSeekDataProvider(private val context: Context, videoUrl: String, int
         }
     }
 
+    /**
+     * Returns a Bitmap for the frame of the video at specified time.
+     * @param index The current seek position.
+     */
     private fun loadThumbnailInBackground(index: Int): Bitmap? {
         try {
             val time = mSeekPositions[index] * 1000

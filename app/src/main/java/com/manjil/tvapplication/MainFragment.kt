@@ -15,6 +15,7 @@ import androidx.leanback.widget.Row
 import androidx.leanback.widget.RowPresenter
 import com.manjil.tvapplication.detailsPage.DetailsActivity
 import com.manjil.tvapplication.model.Movie
+import com.manjil.tvapplication.searchPage.SearchActivity
 
 class MainFragment : BrowseSupportFragment() {
 
@@ -26,6 +27,10 @@ class MainFragment : BrowseSupportFragment() {
         loadItems()
 
         setUpEventListeners()
+        setOnSearchClickedListener {
+            val intent = Intent(context,SearchActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun loadItems() {

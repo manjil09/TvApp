@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import androidx.leanback.app.DetailsSupportFragment
 import androidx.leanback.widget.Action
 import androidx.leanback.widget.ArrayObjectAdapter
@@ -43,12 +44,20 @@ class DetailsFragment : DetailsSupportFragment() {
     private fun setupEventListeners() {
         onItemViewClickedListener =
             OnItemViewClickedListener { _, item, _, row ->
+                /**
+                 * Called when an item inside a row gets clicked.
+                 * @param <anonymous parameter 0> The view holder of the item that is clicked.
+                 * @param item The item that is currently selected.
+                 * @param <anonymous parameter 2> The view holder of the row which the clicked item belongs to.
+                 * @param row The row which the clicked item belongs to.
+                 */
                 if (row.id == 0L) {
                     val intent = Intent(requireContext(), DetailsActivity::class.java)
                     intent.putExtra("movie", item as Movie)
                     startActivity(intent)
                 }
             }
+
     }
 
     private fun setupRelatedVideoRow() {

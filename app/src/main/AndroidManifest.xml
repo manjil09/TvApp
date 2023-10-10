@@ -19,6 +19,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TVApplication">
         <activity
+            android:name=".searchPage.SearchActivity"
+            android:exported="false" />
+        <activity
             android:name=".playbackPage.VideoPlaybackActivity"
             android:exported="false" />
         <activity
