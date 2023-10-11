@@ -19,6 +19,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TVApplication">
         <activity
+            android:name=".errorPage.ErrorActivity"
+            android:exported="false" />
+        <activity
             android:name=".searchPage.SearchActivity"
             android:exported="false" />
         <activity

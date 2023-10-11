@@ -29,7 +29,7 @@ class CustomSeekDataProvider(private val context: Context, videoUrl: String, int
 
         thumbnailCache = HashMap(size)
         mSeekPositions = LongArray(size)
-        for (i in 0..<size) seekPositions[i] = i * interval
+        for(i in 0..<size) seekPositions[i] = i * interval
     }
 
     override fun getSeekPositions(): LongArray {

@@ -14,6 +14,7 @@ import androidx.leanback.widget.Presenter
 import androidx.leanback.widget.Row
 import androidx.leanback.widget.RowPresenter
 import com.manjil.tvapplication.detailsPage.DetailsActivity
+import com.manjil.tvapplication.errorPage.ErrorActivity
 import com.manjil.tvapplication.model.Movie
 import com.manjil.tvapplication.searchPage.SearchActivity
 
@@ -37,7 +38,7 @@ class MainFragment : BrowseSupportFragment() {
         val headerItem = HeaderItem(0, "ItemPresenter")
         val headerItem1 = HeaderItem(1, "Second Header")
         val rowItemAdapter = ArrayObjectAdapter(ItemPresenter())
-        rowItemAdapter.add("ITEM 1")
+        rowItemAdapter.add("Error Fragment")
         rowItemAdapter.add("ITEM 2")
         rowItemAdapter.add("ITEM 3")
 
@@ -84,7 +85,7 @@ class MainFragment : BrowseSupportFragment() {
     private fun setUpEventListeners() {
         onItemViewSelectedListener = ItemViewSelectedListener()
         onItemViewClickedListener =
-            OnItemViewClickedListener { itemViewHolder, item, _, _ ->
+            OnItemViewClickedListener { itemViewHolder, item, rowViewHolder, row ->
                 /**
                  * Called when an item inside a row gets clicked.
                  * @param itemViewHolder The view holder of the item that is clicked.
@@ -96,6 +97,11 @@ class MainFragment : BrowseSupportFragment() {
                     val intent = Intent(context, DetailsActivity::class.java)
                     intent.putExtra("movie", item as Movie)
                     startActivity(intent)
+                } else if (row.headerItem.id == 0L) {
+                    if (item == "Error Fragment") {
+                        val intent = Intent(context, ErrorActivity::class.java)
+                        startActivity(intent)
+                    }
                 }
             }
     }
