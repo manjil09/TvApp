@@ -23,12 +23,10 @@ class MainFragment : BrowseSupportFragment() {
         super.onCreate(savedInstanceState)
 
         setupUIElements()
-
         loadItems()
-
         setUpEventListeners()
         setOnSearchClickedListener {
-            val intent = Intent(context,SearchActivity::class.java)
+            val intent = Intent(context, SearchActivity::class.java)
             startActivity(intent)
         }
     }
@@ -86,13 +84,13 @@ class MainFragment : BrowseSupportFragment() {
     private fun setUpEventListeners() {
         onItemViewSelectedListener = ItemViewSelectedListener()
         onItemViewClickedListener =
-            OnItemViewClickedListener { itemViewHolder, item, rowViewHolder, row ->
+            OnItemViewClickedListener { itemViewHolder, item, _, _ ->
                 /**
                  * Called when an item inside a row gets clicked.
                  * @param itemViewHolder The view holder of the item that is clicked.
                  * @param item The item that is currently selected.
-                 * @param rowViewHolder The view holder of the row which the clicked item belongs to.
-                 * @param row The row which the clicked item belongs to.
+                 * @param <anonymous parameter 2> The view holder of the row which the clicked item belongs to.
+                 * @param <anonymous parameter 3> The row which the clicked item belongs to.
                  */
                 if (itemViewHolder.view is ImageCardView) {
                     val intent = Intent(context, DetailsActivity::class.java)
