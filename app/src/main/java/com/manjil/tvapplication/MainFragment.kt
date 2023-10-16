@@ -11,8 +11,11 @@ import androidx.leanback.widget.ListRowPresenter
 import androidx.leanback.widget.OnItemViewClickedListener
 import androidx.leanback.widget.OnItemViewSelectedListener
 import androidx.leanback.widget.Presenter
+import androidx.leanback.widget.PresenterSelector
 import androidx.leanback.widget.Row
 import androidx.leanback.widget.RowPresenter
+import com.manjil.tvapplication.customHeaderItem.IconHeaderItem
+import com.manjil.tvapplication.customHeaderItem.IconHeaderItemPresenter
 import com.manjil.tvapplication.detailsPage.DetailsActivity
 import com.manjil.tvapplication.errorPage.ErrorActivity
 import com.manjil.tvapplication.model.Movie
@@ -35,13 +38,12 @@ class MainFragment : BrowseSupportFragment() {
     private fun loadItems() {
         val rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
 
-        val headerItem = HeaderItem(0, "ItemPresenter")
-        val headerItem1 = HeaderItem(1, "Second Header")
+        val headerItem = IconHeaderItem(0, "ItemPresenter", R.drawable.ic_play)
+        val headerItem1 = IconHeaderItem(1, "Second Header", R.drawable.ic_play)
         val rowItemAdapter = ArrayObjectAdapter(ItemPresenter())
         rowItemAdapter.add("Error Fragment")
         rowItemAdapter.add("ITEM 2")
         rowItemAdapter.add("ITEM 3")
-
 
         val cardItemAdapter = ArrayObjectAdapter(CardPresenter())
         cardItemAdapter.add(
@@ -78,6 +80,15 @@ class MainFragment : BrowseSupportFragment() {
         headersState = HEADERS_HIDDEN
         isHeadersTransitionOnBackEnabled = true
 
+        setHeaderPresenterSelector(object : PresenterSelector(){
+            /**
+             * Returns a presenter for the given item.
+             */
+            override fun getPresenter(item: Any?): Presenter {
+                return IconHeaderItemPresenter()
+            }
+
+        })
 
         brandColor = resources.getColor(R.color.fastlane_background, requireActivity().theme)
     }

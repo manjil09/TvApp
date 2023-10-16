@@ -17,7 +17,7 @@
         android:label="@string/app_name"
         android:logo="@drawable/app_icon"
         android:supportsRtl="true"
-        android:theme="@style/Theme.TVApplication">
+        android:theme="@style/Theme.Leanback">
         <activity
             android:name=".errorPage.ErrorActivity"
             android:exported="false" />
