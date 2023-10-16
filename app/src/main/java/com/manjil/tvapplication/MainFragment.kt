@@ -4,10 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.ArrayObjectAdapter
-import androidx.leanback.widget.HeaderItem
 import androidx.leanback.widget.ImageCardView
 import androidx.leanback.widget.ListRow
-import androidx.leanback.widget.ListRowPresenter
 import androidx.leanback.widget.OnItemViewClickedListener
 import androidx.leanback.widget.OnItemViewSelectedListener
 import androidx.leanback.widget.Presenter
@@ -16,13 +14,16 @@ import androidx.leanback.widget.Row
 import androidx.leanback.widget.RowPresenter
 import com.manjil.tvapplication.customHeaderItem.IconHeaderItem
 import com.manjil.tvapplication.customHeaderItem.IconHeaderItemPresenter
+import com.manjil.tvapplication.customListRow.CustomListRow
+import com.manjil.tvapplication.customListRow.CustomListRowPresenter
 import com.manjil.tvapplication.detailsPage.DetailsActivity
 import com.manjil.tvapplication.errorPage.ErrorActivity
 import com.manjil.tvapplication.model.Movie
+import com.manjil.tvapplication.model.MovieRepo
 import com.manjil.tvapplication.searchPage.SearchActivity
 
 class MainFragment : BrowseSupportFragment() {
-
+    private val movieRepo = MovieRepo()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -36,40 +37,26 @@ class MainFragment : BrowseSupportFragment() {
     }
 
     private fun loadItems() {
-        val rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
+        val rowsAdapter = ArrayObjectAdapter(CustomListRowPresenter())
 
+        //setup for the first row
         val headerItem = IconHeaderItem(0, "ItemPresenter", R.drawable.ic_play)
+        val textItemAdapter = ArrayObjectAdapter(ItemPresenter())
+        textItemAdapter.add("Error Fragment")
+        textItemAdapter.add("ITEM 2")
+        textItemAdapter.add("ITEM 3")
+        val textItemListRow = CustomListRow(headerItem, textItemAdapter)
+
+        //setup for the second row
         val headerItem1 = IconHeaderItem(1, "Second Header", R.drawable.ic_play)
-        val rowItemAdapter = ArrayObjectAdapter(ItemPresenter())
-        rowItemAdapter.add("Error Fragment")
-        rowItemAdapter.add("ITEM 2")
-        rowItemAdapter.add("ITEM 3")
-
         val cardItemAdapter = ArrayObjectAdapter(CardPresenter())
-        cardItemAdapter.add(
-            Movie(
-                "First Title",
-                "Description for first title",
-                "https://storage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg"
-            )
-        )
-        cardItemAdapter.add(
-            Movie(
-                "Second Title",
-                "Description for second title",
-                "https://storage.googleapis.com/gtv-videos-bucket/sample/images/ElephantsDream.jpg"
-            )
-        )
-        cardItemAdapter.add(
-            Movie(
-                "Third Title",
-                "Description for third title",
-                "https://storage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerEscapes.jpg"
-            )
-        )
+        for (movie in movieRepo.getMovieList())
+            cardItemAdapter.add(movie)
+        val cardItemListRow = CustomListRow(headerItem1, cardItemAdapter)
+        cardItemListRow.numRows = 2
 
-        rowsAdapter.add(ListRow(headerItem, rowItemAdapter))
-        rowsAdapter.add(ListRow(headerItem1, cardItemAdapter))
+        rowsAdapter.add(textItemListRow)
+        rowsAdapter.add(cardItemListRow)
         adapter = rowsAdapter
     }
 
@@ -96,13 +83,13 @@ class MainFragment : BrowseSupportFragment() {
     private fun setUpEventListeners() {
         onItemViewSelectedListener = ItemViewSelectedListener()
         onItemViewClickedListener =
-            OnItemViewClickedListener { itemViewHolder, item, rowViewHolder, row ->
+            OnItemViewClickedListener { itemViewHolder, item, _, row ->
                 /**
                  * Called when an item inside a row gets clicked.
                  * @param itemViewHolder The view holder of the item that is clicked.
                  * @param item The item that is currently selected.
                  * @param <anonymous parameter 2> The view holder of the row which the clicked item belongs to.
-                 * @param <anonymous parameter 3> The row which the clicked item belongs to.
+                 * @param row The row which the clicked item belongs to.
                  */
                 if (itemViewHolder.view is ImageCardView) {
                     val intent = Intent(context, DetailsActivity::class.java)
