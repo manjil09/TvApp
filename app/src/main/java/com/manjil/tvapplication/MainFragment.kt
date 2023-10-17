@@ -50,8 +50,7 @@ class MainFragment : BrowseSupportFragment() {
         //setup for the second row
         val headerItem1 = IconHeaderItem(1, "Second Header", R.drawable.ic_play)
         val cardItemAdapter = ArrayObjectAdapter(CardPresenter())
-        for (movie in movieRepo.getMovieList())
-            cardItemAdapter.add(movie)
+        cardItemAdapter.addAll(0,movieRepo.getMovieList())
         val cardItemListRow = CustomListRow(headerItem1, cardItemAdapter)
         cardItemListRow.numRows = 2
 
