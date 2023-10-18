@@ -5,12 +5,13 @@
     android:background="@color/default_background"
     android:focusable="true"
     android:focusableInTouchMode="true"
+    android:paddingHorizontal="4dp"
     android:gravity="center">
 
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="title"
+        android:textAlignment="center"
         android:textSize="28sp" />
 </LinearLayout>

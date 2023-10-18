@@ -5,7 +5,6 @@ import android.os.Bundle
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.ArrayObjectAdapter
 import androidx.leanback.widget.ImageCardView
-import androidx.leanback.widget.ListRow
 import androidx.leanback.widget.OnItemViewClickedListener
 import androidx.leanback.widget.OnItemViewSelectedListener
 import androidx.leanback.widget.Presenter
@@ -18,6 +17,7 @@ import com.manjil.tvapplication.customListRow.CustomListRow
 import com.manjil.tvapplication.customListRow.CustomListRowPresenter
 import com.manjil.tvapplication.detailsPage.DetailsActivity
 import com.manjil.tvapplication.errorPage.ErrorActivity
+import com.manjil.tvapplication.guidedStep.GuidedStepActivity
 import com.manjil.tvapplication.model.Movie
 import com.manjil.tvapplication.model.MovieRepo
 import com.manjil.tvapplication.searchPage.SearchActivity
@@ -43,7 +43,7 @@ class MainFragment : BrowseSupportFragment() {
         val headerItem = IconHeaderItem(0, "ItemPresenter", R.drawable.ic_play)
         val textItemAdapter = ArrayObjectAdapter(ItemPresenter())
         textItemAdapter.add("Error Fragment")
-        textItemAdapter.add("ITEM 2")
+        textItemAdapter.add("GuidedStep Fragment")
         textItemAdapter.add("ITEM 3")
         val textItemListRow = CustomListRow(headerItem, textItemAdapter)
 
@@ -97,6 +97,9 @@ class MainFragment : BrowseSupportFragment() {
                 } else if (row.headerItem.id == 0L) {
                     if (item == "Error Fragment") {
                         val intent = Intent(context, ErrorActivity::class.java)
+                        startActivity(intent)
+                    } else if (item == "GuidedStep Fragment"){
+                        val intent = Intent(context, GuidedStepActivity::class.java)
                         startActivity(intent)
                     }
                 }
