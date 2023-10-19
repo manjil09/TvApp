@@ -21,6 +21,7 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.manjil.tvapplication.CardPresenter
 import com.manjil.tvapplication.model.Movie
+import com.manjil.tvapplication.model.MovieRepo
 import com.manjil.tvapplication.playbackPage.VideoPlaybackActivity
 import java.io.Serializable
 
@@ -63,27 +64,7 @@ class DetailsFragment : DetailsSupportFragment() {
     private fun setupRelatedVideoRow() {
         val headerItem = HeaderItem(0, "Related Videos")
         val listRowAdapter = ArrayObjectAdapter(CardPresenter())
-        listRowAdapter.add(
-            Movie(
-                "First Title",
-                "Description for first title",
-                "https://storage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg"
-            )
-        )
-        listRowAdapter.add(
-            Movie(
-                "Second Title",
-                "Description for second title",
-                "https://storage.googleapis.com/gtv-videos-bucket/sample/images/ElephantsDream.jpg"
-            )
-        )
-        listRowAdapter.add(
-            Movie(
-                "Third Title",
-                "Description for third title",
-                "https://storage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerEscapes.jpg"
-            )
-        )
+        listRowAdapter.addAll(0,MovieRepo().getMovieList())
         mAdapter.add(ListRow(headerItem, listRowAdapter))
         presenterSelector.addClassPresenter(ListRow::class.java, ListRowPresenter())
     }

@@ -5,5 +5,6 @@ import java.io.Serializable
 data class Movie(
     var title: String,
     var description: String,
-    var imageUrl: String
+    var imageUrl: String,
+    var backgroundUrl: String
 ): Serializable
