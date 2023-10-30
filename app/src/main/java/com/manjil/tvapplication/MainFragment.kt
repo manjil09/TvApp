@@ -37,7 +37,6 @@ import com.manjil.tvapplication.searchPage.SearchActivity
 import java.util.Timer
 import java.util.TimerTask
 
-
 class MainFragment : BrowseSupportFragment() {
     private val movieRepo = MovieRepo()
     private val handler = Handler(Looper.myLooper()!!)
@@ -195,6 +194,7 @@ class MainFragment : BrowseSupportFragment() {
             arrayOf(windowMetrics.bounds.width() - insets.left - insets.right, windowMetrics.bounds.height())
         } else {
             val displayMetrics = DisplayMetrics()
+            @Suppress("DEPRECATION")
             activity.windowManager.defaultDisplay.getMetrics(displayMetrics)
             arrayOf(displayMetrics.widthPixels, displayMetrics.heightPixels)
         }
