@@ -1,6 +1,8 @@
 package com.manjil.tvapplication.customListRow
 
+import android.view.ViewGroup
 import androidx.leanback.widget.ListRowPresenter
+import androidx.leanback.widget.ListRowView
 import androidx.leanback.widget.RowPresenter
 
 class CustomListRowPresenter : ListRowPresenter() {
@@ -10,7 +12,6 @@ class CustomListRowPresenter : ListRowPresenter() {
 
         super.onBindRowViewHolder(holder, item)
     }
-
     override fun initializeRowViewHolder(holder: RowPresenter.ViewHolder?) {
         super.initializeRowViewHolder(holder)
 

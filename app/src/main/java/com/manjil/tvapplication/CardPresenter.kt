@@ -1,6 +1,10 @@
 package com.manjil.tvapplication
 
+import android.content.Context
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.appcompat.view.ContextThemeWrapper
+import androidx.core.view.marginEnd
 import androidx.leanback.widget.BaseCardView
 import androidx.leanback.widget.ImageCardView
 import androidx.leanback.widget.Presenter
@@ -12,9 +16,19 @@ class CardPresenter: Presenter() {
      * Creates a new [View].
      */
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
-        val cardView = ImageCardView(parent.context)
+        val cardView = ImageCardView(ContextThemeWrapper(parent.context, R.style.CustomImageCardTheme))
+
+        val layoutParams = ViewGroup.MarginLayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT, // Width
+            ViewGroup.LayoutParams.WRAP_CONTENT // Height
+        )
+        layoutParams.setMargins(0, 0, 44, 0)
+        cardView.layoutParams = layoutParams
+
         cardView.isFocusable = true
         cardView.isFocusableInTouchMode = true
+        cardView.setBackgroundResource(R.drawable.rounded_corner_background)
+
         return ViewHolder(cardView)
     }
 
@@ -27,8 +41,9 @@ class CardPresenter: Presenter() {
 
         cardView.titleText = movie.title
         cardView.contentText = movie.description
-        cardView.infoVisibility = BaseCardView.CARD_REGION_VISIBLE_SELECTED
-        cardView.setMainImageDimensions(400,200)
+        cardView.infoVisibility = BaseCardView.GONE
+        cardView.setMainImageDimensions(400,300)
+
         Glide.with(viewHolder.view.context)
             .load(movie.imageUrl)
             .centerCrop()

@@ -1,9 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.fragment.app.FragmentContainerView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/mainBrowseFragment"
-    tools:context=".MainActivity" />
+    tools:context=".MainActivity" >
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_gravity="top"
+        android:layout_height="400dp"
+        >
+    <androidx.fragment.app.FragmentContainerView
+        android:layout_width="match_parent"
+        android:layout_gravity="top"
+        android:layout_height="match_parent"
+        android:id="@+id/overviewFragment"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/fade_gradient"/>
+    </FrameLayout>
+    <androidx.fragment.app.FragmentContainerView
+        android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:id="@+id/mainBrowseFragment"
+        android:background="@null"/>
+</FrameLayout>
 

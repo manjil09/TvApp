@@ -9,11 +9,16 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.DisplayMetrics
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.WindowInsets
 import androidx.core.content.ContextCompat
 import androidx.leanback.app.BackgroundManager
 import androidx.leanback.app.BrowseSupportFragment
+import androidx.leanback.app.RowsSupportFragment
 import androidx.leanback.widget.ArrayObjectAdapter
+import androidx.leanback.widget.BrowseFrameLayout
 import androidx.leanback.widget.ImageCardView
 import androidx.leanback.widget.OnItemViewClickedListener
 import androidx.leanback.widget.OnItemViewSelectedListener
@@ -37,7 +42,7 @@ import com.manjil.tvapplication.searchPage.SearchActivity
 import java.util.Timer
 import java.util.TimerTask
 
-class MainFragment : BrowseSupportFragment() {
+class MainFragment : RowsSupportFragment() {
     private val movieRepo = MovieRepo()
     private val handler = Handler(Looper.myLooper()!!)
     private var backgroundTimer: Timer? = null
@@ -52,10 +57,6 @@ class MainFragment : BrowseSupportFragment() {
         setupUIElements()
         loadItems()
         setUpEventListeners()
-        setOnSearchClickedListener {
-            val intent = Intent(context, SearchActivity::class.java)
-            startActivity(intent)
-        }
     }
 
     private fun prepareBackground() {
@@ -69,13 +70,6 @@ class MainFragment : BrowseSupportFragment() {
         val rowsAdapter = ArrayObjectAdapter(CustomListRowPresenter())
         val cardPresenter = CardPresenter()
 
-        //setup for the second row
-//        val headerItem1 = IconHeaderItem(1, "Second Header", R.drawable.ic_play)
-//        val cardItemAdapter = ArrayObjectAdapter(cardPresenter)
-//        cardItemAdapter.addAll(0, movieRepo.getMovieList())
-//        val cardItemListRow = CustomListRow(headerItem1, cardItemAdapter)
-//        cardItemListRow.numRows = 2
-
         for (i in 0 until 5){
             val headerItem1 = IconHeaderItem(i.toLong(), "Category ${i+1}", R.drawable.ic_play)
             val cardItemAdapter = ArrayObjectAdapter(cardPresenter)
@@ -84,7 +78,7 @@ class MainFragment : BrowseSupportFragment() {
             rowsAdapter.add(cardItemListRow)
         }
 
-        //setup for the last row
+        // setup for the last row
         val headerItem = IconHeaderItem(6, "ItemPresenter", R.drawable.ic_play)
         val textItemAdapter = ArrayObjectAdapter(ItemPresenter())
         textItemAdapter.add("Error Fragment")
@@ -97,23 +91,23 @@ class MainFragment : BrowseSupportFragment() {
     }
 
     private fun setupUIElements() {
-        title = "Android TV"
-//        badgeDrawable = AppCompatResources.getDrawable(requireActivity(),R.drawable.badge)
-
-        headersState = HEADERS_DISABLED
-        isHeadersTransitionOnBackEnabled = true
-
-        setHeaderPresenterSelector(object : PresenterSelector() {
-            /**
-             * Returns a presenter for the given item.
-             */
-            override fun getPresenter(item: Any?): Presenter {
-                return IconHeaderItemPresenter()
-            }
-
-        })
-
-        brandColor = resources.getColor(R.color.fastlane_background, requireActivity().theme)
+//        title = "Android TV"
+////        badgeDrawable = AppCompatResources.getDrawable(requireActivity(),R.drawable.badge)
+//
+//        headersState = HEADERS_DISABLED
+//        isHeadersTransitionOnBackEnabled = true
+//
+//        setHeaderPresenterSelector(object : PresenterSelector() {
+//            /**
+//             * Returns a presenter for the given item.
+//             */
+//            override fun getPresenter(item: Any?): Presenter {
+//                return IconHeaderItemPresenter()
+//            }
+//
+//        })
+//
+//        brandColor = resources.getColor(R.color.fastlane_background, requireActivity().theme)
     }
 
     private fun setUpEventListeners() {
@@ -151,8 +145,18 @@ class MainFragment : BrowseSupportFragment() {
             row: Row?,
         ) {
             if (item is Movie) {
-                backgroundUrl = item.backgroundUrl
-                startBackgroundTimer()
+//                backgroundUrl = item.backgroundUrl
+//                startBackgroundTimer()
+
+                val overviewFragment = OverviewFragment.newInstance(item.title,item.description,item.backgroundUrl)
+
+                val fragmentManager = parentFragmentManager
+
+                val transaction = fragmentManager.beginTransaction()
+
+                transaction.replace(R.id.overviewFragment, overviewFragment)
+
+                transaction.commit()
             }
         }
     }
