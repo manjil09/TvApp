@@ -67,24 +67,32 @@ class MainFragment : BrowseSupportFragment() {
 
     private fun loadItems() {
         val rowsAdapter = ArrayObjectAdapter(CustomListRowPresenter())
+        val cardPresenter = CardPresenter()
 
-        //setup for the first row
-        val headerItem = IconHeaderItem(0, "ItemPresenter", R.drawable.ic_play)
+        //setup for the second row
+//        val headerItem1 = IconHeaderItem(1, "Second Header", R.drawable.ic_play)
+//        val cardItemAdapter = ArrayObjectAdapter(cardPresenter)
+//        cardItemAdapter.addAll(0, movieRepo.getMovieList())
+//        val cardItemListRow = CustomListRow(headerItem1, cardItemAdapter)
+//        cardItemListRow.numRows = 2
+
+        for (i in 0 until 5){
+            val headerItem1 = IconHeaderItem(i.toLong(), "Category ${i+1}", R.drawable.ic_play)
+            val cardItemAdapter = ArrayObjectAdapter(cardPresenter)
+            cardItemAdapter.addAll(0, movieRepo.getMovieList())
+            val cardItemListRow = CustomListRow(headerItem1, cardItemAdapter)
+            rowsAdapter.add(cardItemListRow)
+        }
+
+        //setup for the last row
+        val headerItem = IconHeaderItem(6, "ItemPresenter", R.drawable.ic_play)
         val textItemAdapter = ArrayObjectAdapter(ItemPresenter())
         textItemAdapter.add("Error Fragment")
         textItemAdapter.add("GuidedStep Fragment")
         textItemAdapter.add("ITEM 3")
         val textItemListRow = CustomListRow(headerItem, textItemAdapter)
 
-        //setup for the second row
-        val headerItem1 = IconHeaderItem(1, "Second Header", R.drawable.ic_play)
-        val cardItemAdapter = ArrayObjectAdapter(CardPresenter())
-        cardItemAdapter.addAll(0, movieRepo.getMovieList())
-        val cardItemListRow = CustomListRow(headerItem1, cardItemAdapter)
-        cardItemListRow.numRows = 2
-
         rowsAdapter.add(textItemListRow)
-        rowsAdapter.add(cardItemListRow)
         adapter = rowsAdapter
     }
 
@@ -92,7 +100,7 @@ class MainFragment : BrowseSupportFragment() {
         title = "Android TV"
 //        badgeDrawable = AppCompatResources.getDrawable(requireActivity(),R.drawable.badge)
 
-        headersState = HEADERS_HIDDEN
+        headersState = HEADERS_DISABLED
         isHeadersTransitionOnBackEnabled = true
 
         setHeaderPresenterSelector(object : PresenterSelector() {
