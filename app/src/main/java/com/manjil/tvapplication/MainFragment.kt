@@ -9,12 +9,13 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.ContextThemeWrapper
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowInsets
-import androidx.core.content.ContextCompat
 import androidx.leanback.app.BackgroundManager
 import androidx.leanback.app.RowsSupportFragment
 import androidx.leanback.widget.ArrayObjectAdapter
@@ -27,6 +28,7 @@ import androidx.leanback.widget.RowPresenter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
+import com.google.android.material.tabs.TabLayout
 import com.manjil.tvapplication.customHeaderItem.IconHeaderItem
 import com.manjil.tvapplication.customListRow.CustomListRow
 import com.manjil.tvapplication.customListRow.CustomListRowPresenter
@@ -46,39 +48,35 @@ class MainFragment : RowsSupportFragment() {
     private lateinit var backgroundManager: BackgroundManager
     private var defaultBackground: Drawable? = null
     private lateinit var backgroundUrl: String
+    private lateinit var tabLayout: TabLayout
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        val contextThemeWrapper = ContextThemeWrapper(requireContext(), R.style.Theme_TVApplication)
+        val contextThemeWrapper =
+            ContextThemeWrapper(requireContext(), R.style.Theme_TVApplication)
         val themedInflater = inflater.cloneInContext(contextThemeWrapper)
 
         return super.onCreateView(themedInflater, container, savedInstanceState)
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        prepareBackground()
-        setupUIElements()
         loadItems()
         setUpEventListeners()
-    }
 
-    private fun prepareBackground() {
-        backgroundManager = BackgroundManager.getInstance(requireActivity())
-        backgroundManager.attach(requireActivity().window)
-        defaultBackground =
-            ContextCompat.getDrawable(requireContext(), R.drawable.default_background)
+//        tabLayout = requireActivity().findViewById(R.id.tlCategories)
     }
 
     private fun loadItems() {
         val rowsAdapter = ArrayObjectAdapter(CustomListRowPresenter())
         val cardPresenter = CardPresenter()
 
-        for (i in 0 until 5){
-            val headerItem1 = IconHeaderItem(i.toLong(), "Category ${i+1}", R.drawable.ic_play)
+        for (i in 0 until 5) {
+            val headerItem1 = IconHeaderItem(i.toLong(), "Category ${i + 1}", R.drawable.ic_play)
             val cardItemAdapter = ArrayObjectAdapter(cardPresenter)
             cardItemAdapter.addAll(0, movieRepo.getMovieList())
             val cardItemListRow = CustomListRow(headerItem1, cardItemAdapter)
@@ -97,26 +95,6 @@ class MainFragment : RowsSupportFragment() {
         adapter = rowsAdapter
     }
 
-    private fun setupUIElements() {
-//        title = "Android TV"
-////        badgeDrawable = AppCompatResources.getDrawable(requireActivity(),R.drawable.badge)
-//
-//        headersState = HEADERS_DISABLED
-//        isHeadersTransitionOnBackEnabled = true
-//
-//        setHeaderPresenterSelector(object : PresenterSelector() {
-//            /**
-//             * Returns a presenter for the given item.
-//             */
-//            override fun getPresenter(item: Any?): Presenter {
-//                return IconHeaderItemPresenter()
-//            }
-//
-//        })
-//
-//        brandColor = resources.getColor(R.color.fastlane_background, requireActivity().theme)
-    }
-
     private fun setUpEventListeners() {
         onItemViewSelectedListener = ItemViewSelectedListener()
         onItemViewClickedListener =
@@ -131,7 +109,8 @@ class MainFragment : RowsSupportFragment() {
                 if (itemViewHolder.view is ImageCardView) {
                     val intent = Intent(context, DetailsActivity::class.java)
                     intent.putExtra("movie", item as Movie)
-                    startActivity(intent)
+//                    startActivity(intent)
+                    tabLayout.requestFocus()
                 } else if (row.headerItem.id == 0L) {
                     if (item == "Error Fragment") {
                         val intent = Intent(context, ErrorActivity::class.java)
@@ -154,16 +133,6 @@ class MainFragment : RowsSupportFragment() {
             if (item is Movie) {
 //                backgroundUrl = item.backgroundUrl
 //                startBackgroundTimer()
-
-                val overviewFragment = OverviewFragment.newInstance(item.title,item.description,item.backgroundUrl)
-
-                val fragmentManager = parentFragmentManager
-
-                val transaction = fragmentManager.beginTransaction()
-
-                transaction.replace(R.id.overviewFragment, overviewFragment)
-
-                transaction.commit()
             }
         }
     }
@@ -210,7 +179,10 @@ class MainFragment : RowsSupportFragment() {
             val windowMetrics = activity.windowManager.currentWindowMetrics
             val insets: Insets = windowMetrics.windowInsets
                 .getInsetsIgnoringVisibility(WindowInsets.Type.systemBars())
-            arrayOf(windowMetrics.bounds.width() - insets.left - insets.right, windowMetrics.bounds.height())
+            arrayOf(
+                windowMetrics.bounds.width() - insets.left - insets.right,
+                windowMetrics.bounds.height()
+            )
         } else {
             val displayMetrics = DisplayMetrics()
             @Suppress("DEPRECATION")

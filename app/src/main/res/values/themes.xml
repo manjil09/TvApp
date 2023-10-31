@@ -1,15 +1,27 @@
 <resources>
-    <style name="Theme.TVApplication" parent="@style/Theme.Leanback" />
+
+    <style name="Theme.TVApplication" parent="@style/Theme.Leanback"/>
 
     <style name="CustomTabLayoutStyle" parent="Theme.AppCompat">
-        <!-- Customize the style for your TabLayout -->
-        <!-- You can set attributes specific to the TabLayout here -->
+        <item name="focusOutSideEnd">true</item>
+        <item name="focusOutFront">true</item>
     </style>
 
     <style name="CustomImageCardViewStyle" parent="Widget.Leanback.ImageCardViewStyle">
         <item name="cardCornerRadius">50dp</item>
     </style>
+
     <style name="CustomImageCardTheme" parent="Theme.Leanback">
         <item name="imageCardViewStyle">@style/CustomImageCardViewStyle</item>
+    </style>
+
+    <style name="CustomTab">
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_marginHorizontal">12dp</item>
+        <item name="android:focusable">true</item>
+        <item name="android:textColor">@color/tab_color_selector</item>
+        <item name="android:background">@drawable/tab_background_selector</item>
+        <item name="android:focusableInTouchMode">true</item>
+        <item name="android:paddingHorizontal">20dp</item>
     </style>
 </resources>
