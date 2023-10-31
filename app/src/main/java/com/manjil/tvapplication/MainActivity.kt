@@ -13,7 +13,6 @@ import com.manjil.tvapplication.databinding.ActivityMainBinding
 
 class MainActivity : FragmentActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var tabLayout: TabLayout
     private var currentFragment: Fragment? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,15 +24,15 @@ class MainActivity : FragmentActivity() {
 
 //            supportFragmentManager.beginTransaction().replace(R.id.overviewFragment, OverviewFragment.newInstance("","","")).commitNow()
         }
+        setupTabLayout()
         currentFragment = supportFragmentManager.findFragmentById(R.id.mainBrowseFragment)
-        tabLayout = binding.tabLayout
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         val focusedView = window.decorView.findFocus()
         Log.d("TAG", "onKeyDown: ${focusedView.id}")
 
-        if (tabLayout.getTabAt(0)?.view?.isFocused == true && keyCode == KeyEvent.KEYCODE_DPAD_LEFT)
+        if (binding.tabLayout.getTabAt(0)?.view?.isFocused == true && keyCode == KeyEvent.KEYCODE_DPAD_LEFT)
             return true
 
         if (currentFragment != null && keyCode == KeyEvent.KEYCODE_DPAD_UP && currentFragment is MainFragment) {
@@ -43,8 +42,19 @@ class MainActivity : FragmentActivity() {
         return super.onKeyDown(keyCode, event)
     }
 
+    private fun setupTabLayout(){
+        addNewTab("Search",0)
+        addNewTab("For You",1)
+        addNewTab("Movies",2)
+        addNewTab("Live",3)
+        addNewTab("Shows",4)
+    }
+    private fun addNewTab(title: String, position: Int){
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText(title),position)
+    }
+
     private fun setFocusToSelectedTab() {
-        val selectedTabPosition = tabLayout.selectedTabPosition
-        tabLayout.getTabAt(selectedTabPosition)?.view?.requestFocus()
+        val selectedTabPosition = binding.tabLayout.selectedTabPosition
+        binding.tabLayout.getTabAt(selectedTabPosition)?.view?.requestFocus()
     }
 }

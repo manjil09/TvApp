@@ -48,7 +48,6 @@ class MainFragment : RowsSupportFragment() {
     private lateinit var backgroundManager: BackgroundManager
     private var defaultBackground: Drawable? = null
     private lateinit var backgroundUrl: String
-    private lateinit var tabLayout: TabLayout
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -67,8 +66,6 @@ class MainFragment : RowsSupportFragment() {
 
         loadItems()
         setUpEventListeners()
-
-//        tabLayout = requireActivity().findViewById(R.id.tlCategories)
     }
 
     private fun loadItems() {
@@ -109,8 +106,7 @@ class MainFragment : RowsSupportFragment() {
                 if (itemViewHolder.view is ImageCardView) {
                     val intent = Intent(context, DetailsActivity::class.java)
                     intent.putExtra("movie", item as Movie)
-//                    startActivity(intent)
-                    tabLayout.requestFocus()
+                    startActivity(intent)
                 } else if (row.headerItem.id == 0L) {
                     if (item == "Error Fragment") {
                         val intent = Intent(context, ErrorActivity::class.java)

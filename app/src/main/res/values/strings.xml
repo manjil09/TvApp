@@ -6,4 +6,5 @@
     <string name="live">Live</string>
     <string name="movies">Movies</string>
     <string name="shows">Shows</string>
+    <string name="content_desc_preview_poster">Preview poster for selected movie.</string>
 </resources>
