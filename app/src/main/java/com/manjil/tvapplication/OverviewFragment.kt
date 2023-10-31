@@ -1,12 +1,15 @@
 package com.manjil.tvapplication
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
+import com.google.android.material.tabs.TabLayout
 import com.manjil.tvapplication.databinding.FragmentOverviewBinding
+
 
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_title = "title"
@@ -49,6 +52,7 @@ class OverviewFragment : Fragment() {
         binding.tvTitle.text = title
         binding.tvDescription.text = description
     }
+
 
     companion object {
         /**

@@ -1,6 +1,10 @@
 <resources>
     <style name="Theme.TVApplication" parent="@style/Theme.Leanback" />
 
+    <style name="CustomTabLayoutStyle" parent="Theme.AppCompat">
+        <!-- Customize the style for your TabLayout -->
+        <!-- You can set attributes specific to the TabLayout here -->
+    </style>
 
     <style name="CustomImageCardViewStyle" parent="Widget.Leanback.ImageCardViewStyle">
         <item name="cardCornerRadius">50dp</item>

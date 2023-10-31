@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/flContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".OverviewFragment">
@@ -9,7 +10,48 @@
         android:id="@+id/ivBackground"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
+    <com.google.android.material.tabs.TabLayout
+        android:layout_gravity="top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:focusedByDefault="true">
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tiSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/search"
+            android:nextFocusLeft="@id/tiSearch"
+            android:nextFocusRight="@id/tiForYou"/>
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tiForYou"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/for_you"
+            android:nextFocusLeft="@id/tiSearch"
+            android:nextFocusRight="@id/tiLive"/>
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tiLive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/live"
+            android:nextFocusLeft="@id/tiForYou"
+            android:nextFocusRight="@id/tiMovies"/>
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tiMovies"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/movies"
+            android:nextFocusLeft="@id/tiLive"
+            android:nextFocusRight="@id/tiShows"/>
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tiShows"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/shows"
+            android:nextFocusLeft="@id/tiMovies"
+            android:nextFocusRight="@id/tiShows"/>
+    </com.google.android.material.tabs.TabLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

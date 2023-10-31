@@ -9,28 +9,25 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.DisplayMetrics
+import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowInsets
 import androidx.core.content.ContextCompat
 import androidx.leanback.app.BackgroundManager
-import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.app.RowsSupportFragment
 import androidx.leanback.widget.ArrayObjectAdapter
-import androidx.leanback.widget.BrowseFrameLayout
 import androidx.leanback.widget.ImageCardView
 import androidx.leanback.widget.OnItemViewClickedListener
 import androidx.leanback.widget.OnItemViewSelectedListener
 import androidx.leanback.widget.Presenter
-import androidx.leanback.widget.PresenterSelector
 import androidx.leanback.widget.Row
 import androidx.leanback.widget.RowPresenter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.manjil.tvapplication.customHeaderItem.IconHeaderItem
-import com.manjil.tvapplication.customHeaderItem.IconHeaderItemPresenter
 import com.manjil.tvapplication.customListRow.CustomListRow
 import com.manjil.tvapplication.customListRow.CustomListRowPresenter
 import com.manjil.tvapplication.detailsPage.DetailsActivity
@@ -38,9 +35,9 @@ import com.manjil.tvapplication.errorPage.ErrorActivity
 import com.manjil.tvapplication.guidedStep.GuidedStepActivity
 import com.manjil.tvapplication.model.Movie
 import com.manjil.tvapplication.model.MovieRepo
-import com.manjil.tvapplication.searchPage.SearchActivity
 import java.util.Timer
 import java.util.TimerTask
+
 
 class MainFragment : RowsSupportFragment() {
     private val movieRepo = MovieRepo()
@@ -50,6 +47,16 @@ class MainFragment : RowsSupportFragment() {
     private var defaultBackground: Drawable? = null
     private lateinit var backgroundUrl: String
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View? {
+        val contextThemeWrapper = ContextThemeWrapper(requireContext(), R.style.Theme_TVApplication)
+        val themedInflater = inflater.cloneInContext(contextThemeWrapper)
+
+        return super.onCreateView(themedInflater, container, savedInstanceState)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
