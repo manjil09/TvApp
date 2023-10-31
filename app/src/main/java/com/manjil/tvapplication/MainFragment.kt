@@ -174,6 +174,7 @@ class MainFragment : RowsSupportFragment() {
 
     }
 
+    fun getCurrentRow():Int = verticalGridView.selectedPosition
     private fun getScreenWidthAndHeight(activity: Activity): Array<Int> {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             val windowMetrics = activity.windowManager.currentWindowMetrics
