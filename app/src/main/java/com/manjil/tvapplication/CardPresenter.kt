@@ -1,22 +1,20 @@
 package com.manjil.tvapplication
 
-import android.content.Context
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.appcompat.view.ContextThemeWrapper
-import androidx.core.view.marginEnd
 import androidx.leanback.widget.BaseCardView
 import androidx.leanback.widget.ImageCardView
 import androidx.leanback.widget.Presenter
 import com.bumptech.glide.Glide
 import com.manjil.tvapplication.model.Movie
 
-class CardPresenter: Presenter() {
+class CardPresenter : Presenter() {
     /**
      * Creates a new [View].
      */
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
-        val cardView = ImageCardView(ContextThemeWrapper(parent.context, R.style.CustomImageCardTheme))
+        val cardView =
+            ImageCardView(ContextThemeWrapper(parent.context, R.style.CustomImageCardTheme))
 
         val layoutParams = ViewGroup.MarginLayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT, // Width
@@ -42,7 +40,7 @@ class CardPresenter: Presenter() {
         cardView.titleText = movie.title
         cardView.contentText = movie.description
         cardView.infoVisibility = BaseCardView.GONE
-        cardView.setMainImageDimensions(400,300)
+        cardView.setMainImageDimensions(400, 300)
 
         Glide.with(viewHolder.view.context)
             .load(movie.imageUrl)

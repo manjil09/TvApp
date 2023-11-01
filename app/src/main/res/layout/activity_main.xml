@@ -7,30 +7,32 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <FrameLayout
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/overviewFragment"
         android:layout_width="match_parent"
         android:layout_height="400dp"
-        android:layout_gravity="top"/>
+        android:layout_gravity="top" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="@drawable/fade_gradient_inverted"/>
+        android:background="@drawable/fade_gradient_inverted" />
+
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="36dp"
         android:layout_marginVertical="8dp"
         android:defaultFocusHighlightEnabled="false"
-        android:focusedByDefault="true"
         android:focusable="true"
         android:focusableInTouchMode="true"
+        android:focusedByDefault="true"
         app:tabBackground="@drawable/tab_background_selector"
         app:tabIndicatorHeight="0dp"
         app:tabPaddingEnd="20dp"
         app:tabPaddingStart="20dp"
-        app:tabUnboundedRipple="true"
-        app:tabTextColor="@color/tab_color_selector"/>
+        app:tabRippleColor="@android:color/transparent"
+        app:tabTextColor="@color/tab_color_selector" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/mainBrowseFragment"

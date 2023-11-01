@@ -7,15 +7,15 @@ import androidx.leanback.widget.Presenter
 import androidx.leanback.widget.RowHeaderPresenter
 import com.manjil.tvapplication.databinding.GridItemBinding
 
-class ItemPresenter: Presenter() {
+class ItemPresenter : Presenter() {
 
-    class ViewHolder(val binding: GridItemBinding): RowHeaderPresenter.ViewHolder(binding.root)
+    class ViewHolder(val binding: GridItemBinding) : RowHeaderPresenter.ViewHolder(binding.root)
 
     /**
      * Creates a new [View].
      */
     override fun onCreateViewHolder(parent: ViewGroup?): ViewHolder {
-        val binding = GridItemBinding.inflate(LayoutInflater.from(parent!!.context),parent,false)
+        val binding = GridItemBinding.inflate(LayoutInflater.from(parent!!.context), parent, false)
         return ViewHolder(binding)
     }
 

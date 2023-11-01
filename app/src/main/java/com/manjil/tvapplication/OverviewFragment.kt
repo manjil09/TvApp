@@ -1,18 +1,14 @@
 package com.manjil.tvapplication
 
 import android.os.Bundle
-import android.util.Log
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
-import com.google.android.material.tabs.TabLayout
 import com.manjil.tvapplication.databinding.FragmentOverviewBinding
 
 
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_title = "title"
 private const val ARG_description = "description"
 private const val ARG_background_url = "backgroundUrl"
@@ -55,14 +51,6 @@ class OverviewFragment : Fragment() {
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param title Parameter 1.
-         * @param description Parameter 2.
-         * @return A new instance of fragment OverviewFragment.
-         */
         @JvmStatic
         fun newInstance(title: String, description: String, backgroundUrl: String) =
             OverviewFragment().apply {

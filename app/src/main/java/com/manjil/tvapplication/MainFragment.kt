@@ -9,9 +9,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.ContextThemeWrapper
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,7 +26,6 @@ import androidx.leanback.widget.RowPresenter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
-import com.google.android.material.tabs.TabLayout
 import com.manjil.tvapplication.customHeaderItem.IconHeaderItem
 import com.manjil.tvapplication.customListRow.CustomListRow
 import com.manjil.tvapplication.customListRow.CustomListRowPresenter
@@ -81,7 +78,7 @@ class MainFragment : RowsSupportFragment() {
         }
 
         // setup for the last row
-        val headerItem = IconHeaderItem(6, "ItemPresenter", R.drawable.ic_play)
+        val headerItem = IconHeaderItem(0, "ItemPresenter", R.drawable.ic_play)
         val textItemAdapter = ArrayObjectAdapter(ItemPresenter())
         textItemAdapter.add("Error Fragment")
         textItemAdapter.add("GuidedStep Fragment")
@@ -129,15 +126,11 @@ class MainFragment : RowsSupportFragment() {
             if (item is Movie) {
 //                backgroundUrl = item.backgroundUrl
 //                startBackgroundTimer()
-                val overviewFragment = OverviewFragment.newInstance(item.title,item.description,item.backgroundUrl)
+                val overviewFragment =
+                    OverviewFragment.newInstance(item.title, item.description, item.backgroundUrl)
 
-                val fragmentManager = parentFragmentManager
-
-                val transaction = fragmentManager.beginTransaction()
-
-                transaction.replace(R.id.overviewFragment, overviewFragment)
-
-                transaction.commit()
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.overviewFragment, overviewFragment).commit()
             }
         }
     }
@@ -179,7 +172,7 @@ class MainFragment : RowsSupportFragment() {
 
     }
 
-    fun getCurrentRow():Int = verticalGridView.selectedPosition
+    fun getCurrentRow(): Int = verticalGridView.selectedPosition
     private fun getScreenWidthAndHeight(activity: Activity): Array<Int> {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             val windowMetrics = activity.windowManager.currentWindowMetrics
