@@ -22,7 +22,7 @@ class MainActivity : FragmentActivity() {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.mainBrowseFragment, MainFragment()).commitNow()
 
-//            supportFragmentManager.beginTransaction().replace(R.id.overviewFragment, OverviewFragment.newInstance("","","")).commitNow()
+            supportFragmentManager.beginTransaction().replace(R.id.overviewFragment, OverviewFragment.newInstance("","","")).commitNow()
         }
         setupTabLayout()
         currentFragment = supportFragmentManager.findFragmentById(R.id.mainBrowseFragment)

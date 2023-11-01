@@ -49,21 +49,9 @@ class OverviewFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupCategories()
         Glide.with(requireContext()).load(backgroundUrl).centerCrop().into(binding.ivBackground)
         binding.tvTitle.text = title
         binding.tvDescription.text = description
-    }
-
-    private fun setupCategories() {
-        val tlCategories = binding.tlCategories
-        tlCategories.requestFocus()
-
-        tlCategories.addTab(tlCategories.newTab().setText("Search"), 0)
-        tlCategories.addTab(tlCategories.newTab().setText("For You"), 1)
-        tlCategories.addTab(tlCategories.newTab().setText("Live"), 2)
-        tlCategories.addTab(tlCategories.newTab().setText("Movies"), 3)
-        tlCategories.addTab(tlCategories.newTab().setText("Shows"), 4)
     }
 
     companion object {

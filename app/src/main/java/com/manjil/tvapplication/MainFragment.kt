@@ -129,6 +129,15 @@ class MainFragment : RowsSupportFragment() {
             if (item is Movie) {
 //                backgroundUrl = item.backgroundUrl
 //                startBackgroundTimer()
+                val overviewFragment = OverviewFragment.newInstance(item.title,item.description,item.backgroundUrl)
+
+                val fragmentManager = parentFragmentManager
+
+                val transaction = fragmentManager.beginTransaction()
+
+                transaction.replace(R.id.overviewFragment, overviewFragment)
+
+                transaction.commit()
             }
         }
     }
