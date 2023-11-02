@@ -37,7 +37,6 @@ import com.manjil.tvapplication.model.MovieRepo
 import java.util.Timer
 import java.util.TimerTask
 
-
 class MainFragment : RowsSupportFragment() {
     private val movieRepo = MovieRepo()
     private val handler = Handler(Looper.myLooper()!!)

@@ -1,11 +1,12 @@
 package com.manjil.tvapplication.detailsPage
 
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
-import android.view.View
 import androidx.leanback.app.DetailsSupportFragment
+import androidx.leanback.app.DetailsSupportFragmentBackgroundController
 import androidx.leanback.widget.Action
 import androidx.leanback.widget.ArrayObjectAdapter
 import androidx.leanback.widget.ClassPresenterSelector
@@ -20,6 +21,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.manjil.tvapplication.CardPresenter
+import com.manjil.tvapplication.R
 import com.manjil.tvapplication.model.Movie
 import com.manjil.tvapplication.model.MovieRepo
 import com.manjil.tvapplication.playbackPage.VideoPlaybackActivity
@@ -29,9 +31,12 @@ class DetailsFragment : DetailsSupportFragment() {
     private var movie: Movie? = null
     private lateinit var presenterSelector: ClassPresenterSelector
     private lateinit var mAdapter: ArrayObjectAdapter
+    private lateinit var detailsBackground: DetailsSupportFragmentBackgroundController
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        movie = serializable<Movie>("movie")
+        movie = serializable("movie")
+
+        detailsBackground = DetailsSupportFragmentBackgroundController(this)
 
         presenterSelector = ClassPresenterSelector()
         mAdapter = ArrayObjectAdapter(presenterSelector)
@@ -39,7 +44,28 @@ class DetailsFragment : DetailsSupportFragment() {
         setupRelatedVideoRow()
         setupDetailsOverviewRowPresenter()
         setupEventListeners()
+
+        initializeBackground()
+
         adapter = mAdapter
+    }
+
+    private fun initializeBackground() {
+        detailsBackground.enableParallax()
+        Glide.with(requireContext())
+            .asBitmap()
+            .error(R.drawable.default_background)
+            .load(movie?.backgroundUrl)
+            .centerCrop()
+            .into(object : CustomTarget<Bitmap>() {
+                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                    detailsBackground.coverBitmap = resource
+                    mAdapter.notifyArrayItemRangeChanged(0, mAdapter.size())
+                }
+
+                override fun onLoadCleared(placeholder: Drawable?) {
+                }
+            })
     }
 
     private fun setupEventListeners() {
@@ -64,7 +90,7 @@ class DetailsFragment : DetailsSupportFragment() {
     private fun setupRelatedVideoRow() {
         val headerItem = HeaderItem(0, "Related Videos")
         val listRowAdapter = ArrayObjectAdapter(CardPresenter())
-        listRowAdapter.addAll(0,MovieRepo().getMovieList())
+        listRowAdapter.addAll(0, MovieRepo().getMovieList())
         mAdapter.add(ListRow(headerItem, listRowAdapter))
         presenterSelector.addClassPresenter(ListRow::class.java, ListRowPresenter())
     }
@@ -92,7 +118,6 @@ class DetailsFragment : DetailsSupportFragment() {
             Action(
                 0,
                 "Watch Trailer",
-                ""
             )
         )
         actionAdapter.add(

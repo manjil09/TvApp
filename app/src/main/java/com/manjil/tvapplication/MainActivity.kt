@@ -33,6 +33,9 @@ class MainActivity : FragmentActivity() {
         if (binding.tabLayout.getTabAt(0)?.view?.isFocused == true && keyCode == KeyEvent.KEYCODE_DPAD_LEFT)
             return true
 
+        if (binding.tabLayout.getTabAt(binding.tabLayout.tabCount - 1)?.view?.isFocused == true && keyCode == KeyEvent.KEYCODE_DPAD_RIGHT)
+            return true
+
         if (currentFragment != null && keyCode == KeyEvent.KEYCODE_DPAD_UP && currentFragment is MainFragment) {
             val mainFragment = currentFragment as MainFragment
             if (mainFragment.getCurrentRow() == 0) setFocusToSelectedTab()

@@ -9,15 +9,10 @@ import com.bumptech.glide.Glide
 import com.manjil.tvapplication.databinding.FragmentOverviewBinding
 
 
-private const val ARG_title = "title"
-private const val ARG_description = "description"
-private const val ARG_background_url = "backgroundUrl"
+private const val ARG_TITLE = "title"
+private const val ARG_DESCRIPTION = "description"
+private const val ARG_BACKGROUND_URL = "backgroundUrl"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [OverviewFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class OverviewFragment : Fragment() {
     private var title: String? = null
     private var description: String? = null
@@ -27,9 +22,9 @@ class OverviewFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            title = it.getString(ARG_title)
-            description = it.getString(ARG_description)
-            backgroundUrl = it.getString(ARG_background_url)
+            title = it.getString(ARG_TITLE)
+            description = it.getString(ARG_DESCRIPTION)
+            backgroundUrl = it.getString(ARG_BACKGROUND_URL)
         }
     }
 
@@ -55,9 +50,9 @@ class OverviewFragment : Fragment() {
         fun newInstance(title: String, description: String, backgroundUrl: String) =
             OverviewFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_title, title)
-                    putString(ARG_description, description)
-                    putString(ARG_background_url, backgroundUrl)
+                    putString(ARG_TITLE, title)
+                    putString(ARG_DESCRIPTION, description)
+                    putString(ARG_BACKGROUND_URL, backgroundUrl)
                 }
             }
     }
