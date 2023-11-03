@@ -33,7 +33,7 @@ class VideoPlaybackFragment : VideoSupportFragment() {
                 }
             }
         })
-        playerGlue.title = selectedMovie!!.title
+        playerGlue.title = selectedMovie?.title
         playerAdapter.setDataSource(Uri.parse(videoUrl))
     }
 

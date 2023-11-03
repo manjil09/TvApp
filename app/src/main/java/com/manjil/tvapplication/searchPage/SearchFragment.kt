@@ -8,7 +8,7 @@ import androidx.leanback.widget.HeaderItem
 import androidx.leanback.widget.ListRow
 import androidx.leanback.widget.ListRowPresenter
 import androidx.leanback.widget.ObjectAdapter
-import com.manjil.tvapplication.CardPresenter
+import com.manjil.tvapplication.detailsPage.CardPresenter
 import com.manjil.tvapplication.model.MovieRepo
 
 class SearchFragment : SearchSupportFragment(), SearchResultProvider {

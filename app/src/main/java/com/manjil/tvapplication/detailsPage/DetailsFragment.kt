@@ -20,7 +20,6 @@ import androidx.leanback.widget.OnItemViewClickedListener
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
-import com.manjil.tvapplication.CardPresenter
 import com.manjil.tvapplication.R
 import com.manjil.tvapplication.model.Movie
 import com.manjil.tvapplication.model.MovieRepo

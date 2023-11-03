@@ -1,7 +1,6 @@
 package com.manjil.tvapplication
 
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -27,9 +26,6 @@ class MainActivity : FragmentActivity() {
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        val focusedView = window.decorView.findFocus()
-        Log.d("TAG", "onKeyDown: ${focusedView.id}")
-
         if (binding.tabLayout.getTabAt(0)?.view?.isFocused == true && keyCode == KeyEvent.KEYCODE_DPAD_LEFT)
             return true
 
@@ -38,7 +34,8 @@ class MainActivity : FragmentActivity() {
 
         if (currentFragment != null && keyCode == KeyEvent.KEYCODE_DPAD_UP && currentFragment is MainFragment) {
             val mainFragment = currentFragment as MainFragment
-            if (mainFragment.getCurrentRow() == 0) setFocusToSelectedTab()
+            if (mainFragment.getCurrentRow() == 0)
+                binding.tabLayout.getTabAt(binding.tabLayout.selectedTabPosition)?.view?.requestFocus()
         }
         return super.onKeyDown(keyCode, event)
     }
@@ -53,10 +50,5 @@ class MainActivity : FragmentActivity() {
 
     private fun addNewTab(title: String, position: Int) {
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText(title), position)
-    }
-
-    private fun setFocusToSelectedTab() {
-        val selectedTabPosition = binding.tabLayout.selectedTabPosition
-        binding.tabLayout.getTabAt(selectedTabPosition)?.view?.requestFocus()
     }
 }

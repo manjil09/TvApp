@@ -29,7 +29,7 @@ class CustomSeekDataProvider(private val context: Context, videoUrl: String, int
 
         thumbnailCache = HashMap(size)
         mSeekPositions = LongArray(size)
-        for(i in 0..<size) seekPositions[i] = i * interval
+        for (i in 0..<size) seekPositions[i] = i * interval
     }
 
     override fun getSeekPositions(): LongArray {
@@ -41,9 +41,7 @@ class CustomSeekDataProvider(private val context: Context, videoUrl: String, int
 
         if (thumbnail == null) {
             val placeholder = (ResourcesCompat.getDrawable(
-                context.resources,
-                R.drawable.place_holder_image,
-                null
+                context.resources, R.drawable.place_holder_image, null
             ) as VectorDrawable).toBitmap()
 
             callback?.onThumbnailLoaded(placeholder, index)
@@ -74,7 +72,7 @@ class CustomSeekDataProvider(private val context: Context, videoUrl: String, int
             return retriever.getFrameAtTime(time, MediaMetadataRetriever.OPTION_CLOSEST_SYNC)
         } catch (e: Exception) {
             e.printStackTrace()
-            Log.d("TAG", "getThumbnail: exception at index $index")
+            Log.d("TAG", "loadThumbnailInBackground: exception at index $index")
         }
         return null
     }

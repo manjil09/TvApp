@@ -14,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowInsets
+import androidx.cardview.widget.CardView
 import androidx.leanback.app.BackgroundManager
 import androidx.leanback.app.RowsSupportFragment
 import androidx.leanback.widget.ArrayObjectAdapter
@@ -50,8 +51,7 @@ class MainFragment : RowsSupportFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        val contextThemeWrapper =
-            ContextThemeWrapper(requireContext(), R.style.Theme_TVApplication)
+        val contextThemeWrapper = ContextThemeWrapper(requireContext(), R.style.Theme_TVApplication)
         val themedInflater = inflater.cloneInContext(contextThemeWrapper)
 
         return super.onCreateView(themedInflater, container, savedInstanceState)
@@ -65,8 +65,9 @@ class MainFragment : RowsSupportFragment() {
     }
 
     private fun loadItems() {
-        val rowsAdapter = ArrayObjectAdapter(CustomListRowPresenter())
-        val cardPresenter = CardPresenter()
+        val customListRowPresenter = CustomListRowPresenter().apply { shadowEnabled = false }
+        val rowsAdapter = ArrayObjectAdapter(customListRowPresenter)
+        val cardPresenter = MovieCardPresenter()
 
         for (i in 0 until 5) {
             val headerItem1 = IconHeaderItem(i.toLong(), "Category ${i + 1}", R.drawable.ic_play)
@@ -90,29 +91,28 @@ class MainFragment : RowsSupportFragment() {
 
     private fun setUpEventListeners() {
         onItemViewSelectedListener = ItemViewSelectedListener()
-        onItemViewClickedListener =
-            OnItemViewClickedListener { itemViewHolder, item, _, row ->
-                /**
-                 * Called when an item inside a row gets clicked.
-                 * @param itemViewHolder The view holder of the item that is clicked.
-                 * @param item The item that is currently selected.
-                 * @param <anonymous parameter 2> The view holder of the row which the clicked item belongs to.
-                 * @param row The row which the clicked item belongs to.
-                 */
-                if (itemViewHolder.view is ImageCardView) {
-                    val intent = Intent(context, DetailsActivity::class.java)
-                    intent.putExtra("movie", item as Movie)
+        onItemViewClickedListener = OnItemViewClickedListener { itemViewHolder, item, _, row ->
+            /**
+             * Called when an item inside a row gets clicked.
+             * @param itemViewHolder The view holder of the item that is clicked.
+             * @param item The item that is currently selected.
+             * @param <anonymous parameter 2> The view holder of the row which the clicked item belongs to.
+             * @param row The row which the clicked item belongs to.
+             */
+            if (itemViewHolder.view is CardView) {
+                val intent = Intent(context, DetailsActivity::class.java)
+                intent.putExtra("movie", item as Movie)
+                startActivity(intent)
+            } else if (row.headerItem.id == 0L) {
+                if (item == "Error Fragment") {
+                    val intent = Intent(context, ErrorActivity::class.java)
                     startActivity(intent)
-                } else if (row.headerItem.id == 0L) {
-                    if (item == "Error Fragment") {
-                        val intent = Intent(context, ErrorActivity::class.java)
-                        startActivity(intent)
-                    } else if (item == "GuidedStep Fragment") {
-                        val intent = Intent(context, GuidedStepActivity::class.java)
-                        startActivity(intent)
-                    }
+                } else if (item == "GuidedStep Fragment") {
+                    val intent = Intent(context, GuidedStepActivity::class.java)
+                    startActivity(intent)
                 }
             }
+        }
     }
 
     private inner class ItemViewSelectedListener : OnItemViewSelectedListener {
@@ -137,9 +137,7 @@ class MainFragment : RowsSupportFragment() {
     private fun updateBackground(url: String) {
         val width = getScreenWidthAndHeight(requireActivity())[0]
         val height = getScreenWidthAndHeight(requireActivity())[1]
-        Glide.with(requireActivity())
-            .load(url)
-            .centerCrop()
+        Glide.with(requireActivity()).load(url).centerCrop()
             .into(object : CustomTarget<Drawable>(width, height) {
                 override fun onResourceReady(
                     resource: Drawable,
@@ -151,7 +149,6 @@ class MainFragment : RowsSupportFragment() {
                 override fun onLoadCleared(placeholder: Drawable?) {
                     backgroundManager.drawable = placeholder
                 }
-
             })
     }
 
@@ -175,16 +172,15 @@ class MainFragment : RowsSupportFragment() {
     private fun getScreenWidthAndHeight(activity: Activity): Array<Int> {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             val windowMetrics = activity.windowManager.currentWindowMetrics
-            val insets: Insets = windowMetrics.windowInsets
-                .getInsetsIgnoringVisibility(WindowInsets.Type.systemBars())
+            val insets: Insets =
+                windowMetrics.windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.systemBars())
             arrayOf(
                 windowMetrics.bounds.width() - insets.left - insets.right,
                 windowMetrics.bounds.height()
             )
         } else {
             val displayMetrics = DisplayMetrics()
-            @Suppress("DEPRECATION")
-            activity.windowManager.defaultDisplay.getMetrics(displayMetrics)
+            @Suppress("DEPRECATION") activity.windowManager.defaultDisplay.getMetrics(displayMetrics)
             arrayOf(displayMetrics.widthPixels, displayMetrics.heightPixels)
         }
     }

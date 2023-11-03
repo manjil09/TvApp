@@ -1,4 +1,4 @@
-package com.manjil.tvapplication
+package com.manjil.tvapplication.detailsPage
 
 import android.view.ViewGroup
 import androidx.appcompat.view.ContextThemeWrapper
@@ -6,6 +6,7 @@ import androidx.leanback.widget.BaseCardView
 import androidx.leanback.widget.ImageCardView
 import androidx.leanback.widget.Presenter
 import com.bumptech.glide.Glide
+import com.manjil.tvapplication.R
 import com.manjil.tvapplication.model.Movie
 
 class CardPresenter : Presenter() {

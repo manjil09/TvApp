@@ -36,13 +36,13 @@ class VideoPlayerGlue(
     override fun onActionClicked(action: Action?) {
         when (action) {
             rewindAction -> {
-                var newPosition: Long = currentPosition - 10000
+                var newPosition = currentPosition - 10000
                 newPosition = if (newPosition < 0) 0 else newPosition
                 playerAdapter.seekTo(newPosition)
             }
 
             fastForwardAction -> {
-                var newPosition: Long = currentPosition + 10000
+                var newPosition = currentPosition + 10000
                 newPosition = if (newPosition > duration) duration else newPosition
                 playerAdapter.seekTo(newPosition)
             }
