@@ -2,19 +2,6 @@
 
     <style name="Theme.TVApplication" parent="@style/Theme.Leanback"/>
 
-    <style name="CustomTabLayoutStyle" parent="Theme.AppCompat">
-        <item name="focusOutSideEnd">true</item>
-        <item name="focusOutFront">true</item>
-    </style>
-
-    <style name="CustomImageCardViewStyle" parent="Widget.Leanback.ImageCardViewStyle">
-        <item name="cardCornerRadius">50dp</item>
-    </style>
-
-    <style name="CustomImageCardTheme" parent="Theme.Leanback">
-        <item name="imageCardViewStyle">@style/CustomImageCardViewStyle</item>
-    </style>
-
     <style name="CustomTab">
         <item name="android:textSize">16sp</item>
         <item name="android:layout_marginHorizontal">12dp</item>

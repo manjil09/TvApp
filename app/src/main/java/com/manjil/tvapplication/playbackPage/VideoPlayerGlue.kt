@@ -11,16 +11,17 @@ class VideoPlayerGlue(
     context: Context,
     playerAdapter: PlayerAdapter,
 ) : PlaybackTransportControlGlue<PlayerAdapter>(context, playerAdapter) {
-    private var skipPreviousAction: PlaybackControlsRow.SkipPreviousAction
-    private var skipNextAction: PlaybackControlsRow.SkipNextAction
-    private var fastForwardAction: PlaybackControlsRow.FastForwardAction
-    private var rewindAction: PlaybackControlsRow.RewindAction
-
-    init {
-        skipNextAction = PlaybackControlsRow.SkipNextAction(context)
-        skipPreviousAction = PlaybackControlsRow.SkipPreviousAction(context)
-        fastForwardAction = PlaybackControlsRow.FastForwardAction(context)
-        rewindAction = PlaybackControlsRow.RewindAction(context)
+    private val skipNextAction = PlaybackControlsRow.SkipNextAction(context)
+    private val skipPreviousAction = PlaybackControlsRow.SkipPreviousAction(context)
+    private val fastForwardAction = PlaybackControlsRow.FastForwardAction(context)
+    private val rewindAction = PlaybackControlsRow.RewindAction(context)
+    private val thumbsUpAction = PlaybackControlsRow.ThumbsUpAction(context).apply {
+        index = PlaybackControlsRow.ThumbsUpAction.INDEX_OUTLINE
+    }
+    private val shuffleAction = PlaybackControlsRow.ShuffleAction(context)
+    private val repeatAction = PlaybackControlsRow.RepeatAction(context)
+    private val thumbsDownAction = PlaybackControlsRow.ThumbsDownAction(context).apply {
+        index = PlaybackControlsRow.ThumbsDownAction.INDEX_OUTLINE
     }
 
     override fun onCreatePrimaryActions(primaryActionsAdapter: ArrayObjectAdapter?) {
@@ -30,6 +31,15 @@ class VideoPlayerGlue(
             super.onCreatePrimaryActions(primaryActionsAdapter)
             add(fastForwardAction)
             add(skipNextAction)
+        }
+    }
+
+    override fun onCreateSecondaryActions(secondaryActionsAdapter: ArrayObjectAdapter?) {
+        secondaryActionsAdapter?.apply {
+            add(thumbsUpAction)
+            add(thumbsDownAction)
+            add(shuffleAction)
+            add(repeatAction)
         }
     }
 
@@ -47,7 +57,21 @@ class VideoPlayerGlue(
                 playerAdapter.seekTo(newPosition)
             }
 
+            thumbsUpAction,
+            shuffleAction,
+            repeatAction,
+            thumbsDownAction,
+            -> onSecondaryActionPressed(action)
+
             else -> super.onActionClicked(action)
+        }
+    }
+
+    private fun onSecondaryActionPressed(action: Action) {
+        val adapter = controlsRow.secondaryActionsAdapter as? ArrayObjectAdapter ?: return
+        if (action is PlaybackControlsRow.MultiAction) {
+            action.nextIndex()
+            notifyItemChanged(adapter, action)
         }
     }
 }

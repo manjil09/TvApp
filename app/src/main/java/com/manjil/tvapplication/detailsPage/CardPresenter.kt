@@ -15,18 +15,17 @@ class CardPresenter : Presenter() {
      */
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
         val cardView =
-            ImageCardView(ContextThemeWrapper(parent.context, R.style.CustomImageCardTheme))
+            ImageCardView(parent.context)
 
-        val layoutParams = ViewGroup.MarginLayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT, // Width
-            ViewGroup.LayoutParams.WRAP_CONTENT // Height
-        )
-        layoutParams.setMargins(0, 0, 44, 0)
-        cardView.layoutParams = layoutParams
+//        val layoutParams = ViewGroup.MarginLayoutParams(
+//            ViewGroup.LayoutParams.MATCH_PARENT, // Width
+//            ViewGroup.LayoutParams.WRAP_CONTENT // Height
+//        )
+//        layoutParams.setMargins(0, 0, 44, 0)
+//        cardView.layoutParams = layoutParams
 
         cardView.isFocusable = true
         cardView.isFocusableInTouchMode = true
-        cardView.setBackgroundResource(R.drawable.rounded_corner_background)
 
         return ViewHolder(cardView)
     }
@@ -40,7 +39,7 @@ class CardPresenter : Presenter() {
 
         cardView.titleText = movie.title
         cardView.contentText = movie.description
-        cardView.infoVisibility = BaseCardView.GONE
+//        cardView.infoVisibility = BaseCardView.GONE
         cardView.setMainImageDimensions(400, 300)
 
         Glide.with(viewHolder.view.context)

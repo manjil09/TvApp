@@ -26,7 +26,6 @@
         android:defaultFocusHighlightEnabled="false"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:focusedByDefault="true"
         app:tabBackground="@drawable/tab_background_selector"
         app:tabIndicatorHeight="0dp"
         app:tabPaddingEnd="20dp"
@@ -39,6 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:layout_gravity="bottom"
-        android:background="@null" />
+        android:background="@null"
+        android:focusedByDefault="true" />
 </FrameLayout>
 
