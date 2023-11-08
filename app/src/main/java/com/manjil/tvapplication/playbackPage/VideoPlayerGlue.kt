@@ -23,6 +23,9 @@ class VideoPlayerGlue(
     private val thumbsDownAction = PlaybackControlsRow.ThumbsDownAction(context).apply {
         index = PlaybackControlsRow.ThumbsDownAction.INDEX_OUTLINE
     }
+    private val customAction = CustomAction(context).apply {
+        index = CustomAction.INDEX_PLAY
+    }
 
     override fun onCreatePrimaryActions(primaryActionsAdapter: ArrayObjectAdapter?) {
         primaryActionsAdapter?.apply {
@@ -40,6 +43,7 @@ class VideoPlayerGlue(
             add(thumbsDownAction)
             add(shuffleAction)
             add(repeatAction)
+            add(customAction)
         }
     }
 
@@ -61,6 +65,7 @@ class VideoPlayerGlue(
             shuffleAction,
             repeatAction,
             thumbsDownAction,
+            customAction,
             -> onSecondaryActionPressed(action)
 
             else -> super.onActionClicked(action)

@@ -1,5 +1,6 @@
 package com.manjil.tvapplication.customListRow
 
+import android.view.Gravity
 import android.view.ViewGroup
 import androidx.leanback.widget.ListRowPresenter
 import androidx.leanback.widget.ListRowView
@@ -9,7 +10,6 @@ class CustomListRowPresenter : ListRowPresenter() {
     override fun onBindRowViewHolder(holder: RowPresenter.ViewHolder?, item: Any?) {
         val numRows = (item as CustomListRow).numRows
         (holder as ViewHolder).gridView.setNumRows(numRows)
-
         super.onBindRowViewHolder(holder, item)
     }
     override fun initializeRowViewHolder(holder: RowPresenter.ViewHolder?) {

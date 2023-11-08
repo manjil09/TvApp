@@ -19,13 +19,16 @@ import androidx.leanback.widget.HeaderItem
 import androidx.leanback.widget.ListRow
 import androidx.leanback.widget.ListRowPresenter
 import androidx.leanback.widget.PlaybackControlsRow
+import androidx.leanback.widget.Row
+import androidx.leanback.widget.RowPresenter
 import com.manjil.tvapplication.MovieCardPresenter
 import com.manjil.tvapplication.R
+import com.manjil.tvapplication.customListRow.CustomListRow
+import com.manjil.tvapplication.customListRow.CustomListRowPresenter
 import com.manjil.tvapplication.detailsPage.CardPresenter
 import com.manjil.tvapplication.model.Movie
 import com.manjil.tvapplication.model.MovieRepo
 import java.io.Serializable
-
 
 class VideoPlaybackFragment : VideoSupportFragment() {
     private var selectedMovie: Movie? = null
@@ -33,13 +36,14 @@ class VideoPlaybackFragment : VideoSupportFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (adapter.presenterSelector as ClassPresenterSelector)
-            .addClassPresenter(ListRow::class.java, ListRowPresenter())
-
-        val relatedVideoAdapter = ArrayObjectAdapter(MovieCardPresenter())
+        (adapter.presenterSelector as ClassPresenterSelector).addClassPresenter(
+            ListRow::class.java,
+            ListRowPresenter()
+        )
+        val relatedVideoAdapter = ArrayObjectAdapter(CardPresenter())
         relatedVideoAdapter.addAll(0, movieRepo.getMovieList())
 
-        val relatedVideoRow = ListRow(1L, HeaderItem("Up Next"), relatedVideoAdapter)
+        val relatedVideoRow = ListRow(1L, HeaderItem("Related Videos"), relatedVideoAdapter)
         Log.d("vidPlayback", "onViewCreated: adapter added.")
         (adapter as ArrayObjectAdapter).add(relatedVideoRow)
     }
@@ -50,12 +54,10 @@ class VideoPlaybackFragment : VideoSupportFragment() {
         setupPlayerGlue()
     }
 
-
     private fun setupPlayerGlue() {
         val videoUrl =
             "https://commondatastorage.googleapis.com/android-tv/Sample%20videos/Zeitgeist/Zeitgeist%202010_%20Year%20in%20Review.mp4"
         val playerAdapter = MediaPlayerAdapter(context)
-        playerAdapter.setRepeatAction(PlaybackControlsRow.RepeatAction.INDEX_NONE)
         val playerGlue = VideoPlayerGlue(requireContext(), playerAdapter)
 
         playerGlue.host = VideoSupportFragmentGlueHost(this)
@@ -68,6 +70,7 @@ class VideoPlaybackFragment : VideoSupportFragment() {
                 }
             }
         })
+        playerGlue.isControlsOverlayAutoHideEnabled = true
         playerGlue.title = selectedMovie?.title
         playerAdapter.setDataSource(Uri.parse(videoUrl))
     }
