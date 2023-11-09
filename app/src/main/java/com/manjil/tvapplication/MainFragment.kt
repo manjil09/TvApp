@@ -54,12 +54,11 @@ class MainFragment : RowsSupportFragment() {
         presenterSelector.addClassPresenter(ListRow::class.java, ListRowPresenter())
 
         val rowsAdapter = ArrayObjectAdapter(presenterSelector)
-        val cardPresenter = MovieCardPresenter()
 
         for (i in 0 until 5) {
             val headerItem1 = IconHeaderItem("Category ${i + 1}")
-            val cardItemAdapter = ArrayObjectAdapter(cardPresenter)
-            cardItemAdapter.addAll(0, movieRepo.getMovieList())
+            val cardItemAdapter = ArrayObjectAdapter(MovieCardPresenter())
+            cardItemAdapter.addAll(0, movieRepo.getMovieList().shuffled())
             val cardItemListRow = CustomListRow(headerItem1, cardItemAdapter)
             rowsAdapter.add(cardItemListRow)
         }

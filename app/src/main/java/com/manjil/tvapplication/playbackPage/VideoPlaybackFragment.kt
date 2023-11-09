@@ -32,7 +32,7 @@ class VideoPlaybackFragment : VideoSupportFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (savedInstanceState == null) {
+        if (savedInstanceState == null && !::relatedVideoAdapter.isInitialized) {
             (adapter.presenterSelector as ClassPresenterSelector).addClassPresenter(
                 ListRow::class.java,
                 ListRowPresenter()
@@ -47,7 +47,7 @@ class VideoPlaybackFragment : VideoSupportFragment() {
         setupPlayerGlue()
 
         setOnItemViewClickedListener { itemViewHolder, item, rowViewHolder, row ->
-            if (item is Movie && row is ListRow && row.adapter == relatedVideoAdapter) {
+            if (item is Movie && row is ListRow) {
                 playNewMovie(item)
             }
 
@@ -117,10 +117,9 @@ class VideoPlaybackFragment : VideoSupportFragment() {
     }
 
     companion object {
-        fun newInstance(movie: Movie?) =
-            VideoPlaybackFragment().apply {
-                arguments = Bundle().apply { putSerializable(ARG_MOVIE, movie) }
-            }
+        fun newInstance(movie: Movie?) = VideoPlaybackFragment().apply {
+            arguments = Bundle().apply { putSerializable(ARG_MOVIE, movie) }
+        }
 
     }
 }
