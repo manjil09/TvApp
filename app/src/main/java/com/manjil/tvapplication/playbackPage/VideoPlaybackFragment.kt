@@ -4,81 +4,123 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.ContextThemeWrapper
-import android.view.LayoutInflater
+import android.view.KeyEvent
 import android.view.View
-import android.view.ViewGroup
 import androidx.leanback.app.VideoSupportFragment
 import androidx.leanback.app.VideoSupportFragmentGlueHost
 import androidx.leanback.media.MediaPlayerAdapter
 import androidx.leanback.media.PlaybackGlue
-import androidx.leanback.media.PlaybackTransportControlGlue
 import androidx.leanback.widget.ArrayObjectAdapter
 import androidx.leanback.widget.ClassPresenterSelector
 import androidx.leanback.widget.HeaderItem
 import androidx.leanback.widget.ListRow
 import androidx.leanback.widget.ListRowPresenter
-import androidx.leanback.widget.PlaybackControlsRow
-import androidx.leanback.widget.Row
-import androidx.leanback.widget.RowPresenter
-import com.manjil.tvapplication.MovieCardPresenter
 import com.manjil.tvapplication.R
-import com.manjil.tvapplication.customListRow.CustomListRow
-import com.manjil.tvapplication.customListRow.CustomListRowPresenter
 import com.manjil.tvapplication.detailsPage.CardPresenter
 import com.manjil.tvapplication.model.Movie
 import com.manjil.tvapplication.model.MovieRepo
 import java.io.Serializable
 
+private const val ARG_MOVIE = "movie"
+
 class VideoPlaybackFragment : VideoSupportFragment() {
     private var selectedMovie: Movie? = null
     private val movieRepo = MovieRepo()
+    private val relatedMovieList = movieRepo.getMovieList().shuffled()
+    private lateinit var playerGlue: VideoPlayerGlue
+    private lateinit var relatedVideoAdapter: ArrayObjectAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (adapter.presenterSelector as ClassPresenterSelector).addClassPresenter(
-            ListRow::class.java,
-            ListRowPresenter()
-        )
-        val relatedVideoAdapter = ArrayObjectAdapter(CardPresenter())
-        relatedVideoAdapter.addAll(0, movieRepo.getMovieList())
+        if (savedInstanceState == null) {
+            (adapter.presenterSelector as ClassPresenterSelector).addClassPresenter(
+                ListRow::class.java,
+                ListRowPresenter()
+            )
+            setupRelatedVideo()
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        selectedMovie = getSerializable(ARG_MOVIE)
+        setupPlayerGlue()
+
+        setOnItemViewClickedListener { itemViewHolder, item, rowViewHolder, row ->
+            if (item is Movie && row is ListRow && row.adapter == relatedVideoAdapter) {
+                playNewMovie(item)
+            }
+
+        }
+        setOnKeyInterceptListener { v, keyCode, event ->
+            if (!isControlsOverlayVisible) {
+                if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
+                    setSelectedPosition(0)
+                    if (playerGlue.isPlaying) playerGlue.pause() else playerGlue.play()
+                    return@setOnKeyInterceptListener true
+                }
+            }
+            false
+        }
+
+    }
+
+    private fun setupRelatedVideo() {
+        relatedVideoAdapter = ArrayObjectAdapter(CardPresenter())
+        relatedVideoAdapter.addAll(0, relatedMovieList)
 
         val relatedVideoRow = ListRow(1L, HeaderItem("Related Videos"), relatedVideoAdapter)
         Log.d("vidPlayback", "onViewCreated: adapter added.")
         (adapter as ArrayObjectAdapter).add(relatedVideoRow)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        selectedMovie = getSerializable("movie")
-        setupPlayerGlue()
-    }
-
     private fun setupPlayerGlue() {
-        val videoUrl =
-            "https://commondatastorage.googleapis.com/android-tv/Sample%20videos/Zeitgeist/Zeitgeist%202010_%20Year%20in%20Review.mp4"
         val playerAdapter = MediaPlayerAdapter(context)
-        val playerGlue = VideoPlayerGlue(requireContext(), playerAdapter)
+        playerGlue = VideoPlayerGlue(requireContext(), playerAdapter)
 
         playerGlue.host = VideoSupportFragmentGlueHost(this)
         playerGlue.addPlayerCallback(object : PlaybackGlue.PlayerCallback() {
             override fun onPreparedStateChanged(glue: PlaybackGlue?) {
                 if (glue!!.isPrepared) {
                     playerGlue.seekProvider =
-                        CustomSeekDataProvider(requireContext(), videoUrl, 20000L)
-                    playerGlue.play()
+                        CustomSeekDataProvider(requireContext(), selectedMovie!!.videoUrl, 20000L)
                 }
             }
+
+            override fun onPlayCompleted(glue: PlaybackGlue?) {
+                playNewMovie(relatedMovieList[0])
+            }
         })
-        playerGlue.isControlsOverlayAutoHideEnabled = true
+        playerGlue.playWhenPrepared()
         playerGlue.title = selectedMovie?.title
-        playerAdapter.setDataSource(Uri.parse(videoUrl))
+        playerAdapter.setDataSource(Uri.parse(selectedMovie!!.videoUrl))
     }
 
     @Suppress("DEPRECATION")
     private inline fun <reified T : Serializable> getSerializable(key: String): T? =
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU)
-            requireActivity().intent.getSerializableExtra(key) as T
+            arguments?.getSerializable(key) as T
         else
-            requireActivity().intent.getSerializableExtra(key, T::class.java)
+            arguments?.getSerializable(key, T::class.java)
+
+    private fun playNewMovie(movie: Movie) {
+//        val intent = Intent(context, VideoPlaybackActivity::class.java)
+//        intent.putExtra("movie", movie)
+//        startActivity(intent)
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.videoPlaybackFragment, newInstance(movie)).addToBackStack(null).commit()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        playerGlue.pause()
+    }
+
+    companion object {
+        fun newInstance(movie: Movie?) =
+            VideoPlaybackFragment().apply {
+                arguments = Bundle().apply { putSerializable(ARG_MOVIE, movie) }
+            }
+
+    }
 }

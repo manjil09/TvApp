@@ -1,6 +1,7 @@
 package com.manjil.tvapplication.playbackPage
 
 import android.content.Context
+import androidx.leanback.media.MediaPlayerAdapter
 import androidx.leanback.media.PlaybackTransportControlGlue
 import androidx.leanback.media.PlayerAdapter
 import androidx.leanback.widget.Action
@@ -9,8 +10,8 @@ import androidx.leanback.widget.PlaybackControlsRow
 
 class VideoPlayerGlue(
     context: Context,
-    playerAdapter: PlayerAdapter,
-) : PlaybackTransportControlGlue<PlayerAdapter>(context, playerAdapter) {
+    playerAdapter: MediaPlayerAdapter,
+) : PlaybackTransportControlGlue<MediaPlayerAdapter>(context, playerAdapter) {
     private val skipNextAction = PlaybackControlsRow.SkipNextAction(context)
     private val skipPreviousAction = PlaybackControlsRow.SkipPreviousAction(context)
     private val fastForwardAction = PlaybackControlsRow.FastForwardAction(context)
