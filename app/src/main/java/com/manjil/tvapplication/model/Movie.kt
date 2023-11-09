@@ -6,5 +6,6 @@ data class Movie(
     var title: String,
     var description: String,
     var imageUrl: String,
-    var backgroundUrl: String
+    var backgroundUrl: String,
+    var videoUrl: String,
 ): Serializable
