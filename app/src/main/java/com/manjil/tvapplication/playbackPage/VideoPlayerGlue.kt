@@ -3,10 +3,10 @@ package com.manjil.tvapplication.playbackPage
 import android.content.Context
 import androidx.leanback.media.MediaPlayerAdapter
 import androidx.leanback.media.PlaybackTransportControlGlue
-import androidx.leanback.media.PlayerAdapter
 import androidx.leanback.widget.Action
 import androidx.leanback.widget.ArrayObjectAdapter
 import androidx.leanback.widget.PlaybackControlsRow
+import androidx.media3.ui.leanback.LeanbackPlayerAdapter
 
 class VideoPlayerGlue(
     context: Context,
@@ -16,11 +16,11 @@ class VideoPlayerGlue(
     private val skipPreviousAction = PlaybackControlsRow.SkipPreviousAction(context)
     private val fastForwardAction = PlaybackControlsRow.FastForwardAction(context)
     private val rewindAction = PlaybackControlsRow.RewindAction(context)
+    private val shuffleAction = PlaybackControlsRow.ShuffleAction(context)
+    private val repeatAction = PlaybackControlsRow.RepeatAction(context)
     private val thumbsUpAction = PlaybackControlsRow.ThumbsUpAction(context).apply {
         index = PlaybackControlsRow.ThumbsUpAction.INDEX_OUTLINE
     }
-    private val shuffleAction = PlaybackControlsRow.ShuffleAction(context)
-    private val repeatAction = PlaybackControlsRow.RepeatAction(context)
     private val thumbsDownAction = PlaybackControlsRow.ThumbsDownAction(context).apply {
         index = PlaybackControlsRow.ThumbsDownAction.INDEX_OUTLINE
     }
@@ -60,6 +60,14 @@ class VideoPlayerGlue(
                 var newPosition = currentPosition + 10000
                 newPosition = if (newPosition > duration) duration else newPosition
                 playerAdapter.seekTo(newPosition)
+            }
+
+            skipNextAction -> {
+                playerAdapter.next()
+            }
+
+            skipPreviousAction -> {
+                playerAdapter.previous()
             }
 
             thumbsUpAction,

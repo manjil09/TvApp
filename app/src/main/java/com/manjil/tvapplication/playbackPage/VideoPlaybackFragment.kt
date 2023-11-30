@@ -3,7 +3,8 @@ package com.manjil.tvapplication.playbackPage
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
+import android.os.Handler
+import android.os.Looper
 import android.view.KeyEvent
 import android.view.View
 import androidx.leanback.app.VideoSupportFragment
@@ -22,6 +23,7 @@ import com.manjil.tvapplication.model.MovieRepo
 import java.io.Serializable
 
 private const val ARG_MOVIE = "movie"
+private const val HIDE_CONTROL_DELAY = 4000L
 
 class VideoPlaybackFragment : VideoSupportFragment() {
     private var selectedMovie: Movie? = null
@@ -29,13 +31,16 @@ class VideoPlaybackFragment : VideoSupportFragment() {
     private val relatedMovieList = movieRepo.getMovieList().shuffled()
     private lateinit var playerGlue: VideoPlayerGlue
     private lateinit var relatedVideoAdapter: ArrayObjectAdapter
+    private val handler = Handler(Looper.getMainLooper())
+    private val hideControlOverlayRunnable = Runnable {
+        playerGlue.host.hideControlsOverlay(true)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (savedInstanceState == null && !::relatedVideoAdapter.isInitialized) {
             (adapter.presenterSelector as ClassPresenterSelector).addClassPresenter(
-                ListRow::class.java,
-                ListRowPresenter()
+                ListRow::class.java, ListRowPresenter()
             )
             setupRelatedVideo()
         }
@@ -46,23 +51,24 @@ class VideoPlaybackFragment : VideoSupportFragment() {
         selectedMovie = getSerializable(ARG_MOVIE)
         setupPlayerGlue()
 
-        setOnItemViewClickedListener { itemViewHolder, item, rowViewHolder, row ->
+        setOnItemViewClickedListener { _, item, _, row ->
             if (item is Movie && row is ListRow) {
                 playNewMovie(item)
             }
-
         }
-        setOnKeyInterceptListener { v, keyCode, event ->
+        setOnKeyInterceptListener { _, keyCode, _ ->
             if (!isControlsOverlayVisible) {
                 if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
                     setSelectedPosition(0)
                     if (playerGlue.isPlaying) playerGlue.pause() else playerGlue.play()
                     return@setOnKeyInterceptListener true
                 }
+            } else {
+                handler.removeCallbacks(hideControlOverlayRunnable)
+                handler.postDelayed(hideControlOverlayRunnable, HIDE_CONTROL_DELAY)
             }
             false
         }
-
     }
 
     private fun setupRelatedVideo() {
@@ -70,12 +76,24 @@ class VideoPlaybackFragment : VideoSupportFragment() {
         relatedVideoAdapter.addAll(0, relatedMovieList)
 
         val relatedVideoRow = ListRow(1L, HeaderItem("Related Videos"), relatedVideoAdapter)
-        Log.d("vidPlayback", "onViewCreated: adapter added.")
+        val moreVideoRow = ListRow(
+            HeaderItem("More"),
+            ArrayObjectAdapter(CardPresenter()).apply { addAll(0, relatedMovieList.shuffled()) })
         (adapter as ArrayObjectAdapter).add(relatedVideoRow)
+        (adapter as ArrayObjectAdapter).add(moreVideoRow)
     }
 
     private fun setupPlayerGlue() {
-        val playerAdapter = MediaPlayerAdapter(context)
+        val playerAdapter = object : MediaPlayerAdapter(context) {
+            override fun next() {
+                playNewMovie(relatedMovieList[0])
+            }
+
+            override fun previous() {
+                if (parentFragmentManager.backStackEntryCount > 0)
+                    parentFragmentManager.popBackStack()
+            }
+        }
         playerGlue = VideoPlayerGlue(requireContext(), playerAdapter)
 
         playerGlue.host = VideoSupportFragmentGlueHost(this)
@@ -98,17 +116,19 @@ class VideoPlaybackFragment : VideoSupportFragment() {
 
     @Suppress("DEPRECATION")
     private inline fun <reified T : Serializable> getSerializable(key: String): T? =
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU)
-            arguments?.getSerializable(key) as T
-        else
-            arguments?.getSerializable(key, T::class.java)
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) arguments?.getSerializable(key) as T
+        else arguments?.getSerializable(key, T::class.java)
 
     private fun playNewMovie(movie: Movie) {
-//        val intent = Intent(context, VideoPlaybackActivity::class.java)
-//        intent.putExtra("movie", movie)
-//        startActivity(intent)
         parentFragmentManager.beginTransaction()
             .replace(R.id.videoPlaybackFragment, newInstance(movie)).addToBackStack(null).commit()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        showControlsOverlay(false)
+        playerGlue.pause()
+        setSelectedPosition(0)
     }
 
     override fun onStop() {
@@ -116,10 +136,14 @@ class VideoPlaybackFragment : VideoSupportFragment() {
         playerGlue.pause()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacks(hideControlOverlayRunnable)
+    }
+
     companion object {
         fun newInstance(movie: Movie?) = VideoPlaybackFragment().apply {
             arguments = Bundle().apply { putSerializable(ARG_MOVIE, movie) }
         }
-
     }
 }
