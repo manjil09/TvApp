@@ -7,6 +7,7 @@ import android.os.Handler
 import android.os.Looper
 import android.view.KeyEvent
 import android.view.View
+import androidx.annotation.OptIn
 import androidx.leanback.app.VideoSupportFragment
 import androidx.leanback.app.VideoSupportFragmentGlueHost
 import androidx.leanback.media.MediaPlayerAdapter
@@ -16,25 +17,28 @@ import androidx.leanback.widget.ClassPresenterSelector
 import androidx.leanback.widget.HeaderItem
 import androidx.leanback.widget.ListRow
 import androidx.leanback.widget.ListRowPresenter
+import androidx.media3.common.MediaItem
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.ui.leanback.LeanbackPlayerAdapter
 import com.manjil.tvapplication.R
 import com.manjil.tvapplication.detailsPage.CardPresenter
 import com.manjil.tvapplication.model.Movie
 import com.manjil.tvapplication.model.MovieRepo
 import java.io.Serializable
+import java.time.Duration
 
 private const val ARG_MOVIE = "movie"
 private const val HIDE_CONTROL_DELAY = 4000L
 
 class VideoPlaybackFragment : VideoSupportFragment() {
+    private var exoplayer: ExoPlayer? = null
     private var selectedMovie: Movie? = null
     private val movieRepo = MovieRepo()
     private val relatedMovieList = movieRepo.getMovieList().shuffled()
-    private lateinit var playerGlue: VideoPlayerGlue
+
+    //    private lateinit var playerGlue: VideoPlayerGlue
     private lateinit var relatedVideoAdapter: ArrayObjectAdapter
-    private val handler = Handler(Looper.getMainLooper())
-    private val hideControlOverlayRunnable = Runnable {
-        playerGlue.host.hideControlsOverlay(true)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -49,26 +53,18 @@ class VideoPlaybackFragment : VideoSupportFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         selectedMovie = getSerializable(ARG_MOVIE)
-        setupPlayerGlue()
+//        setupPlayerGlue()
 
         setOnItemViewClickedListener { _, item, _, row ->
             if (item is Movie && row is ListRow) {
                 playNewMovie(item)
             }
         }
-        setOnKeyInterceptListener { _, keyCode, _ ->
-            if (!isControlsOverlayVisible) {
-                if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
-                    setSelectedPosition(0)
-                    if (playerGlue.isPlaying) playerGlue.pause() else playerGlue.play()
-                    return@setOnKeyInterceptListener true
-                }
-            } else {
-                handler.removeCallbacks(hideControlOverlayRunnable)
-                handler.postDelayed(hideControlOverlayRunnable, HIDE_CONTROL_DELAY)
-            }
-            false
-        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        initializePlayer()
     }
 
     private fun setupRelatedVideo() {
@@ -83,36 +79,73 @@ class VideoPlaybackFragment : VideoSupportFragment() {
         (adapter as ArrayObjectAdapter).add(moreVideoRow)
     }
 
-    private fun setupPlayerGlue() {
-        val playerAdapter = object : MediaPlayerAdapter(context) {
-            override fun next() {
-                playNewMovie(relatedMovieList[0])
-            }
+    @UnstableApi
+    private fun prepareGlue(localExoplayer: ExoPlayer) {
+        ExoplayerGlue(
+            requireContext(),
+            LeanbackPlayerAdapter(
+                requireContext(),
+                localExoplayer,
+                PLAYER_UPDATE_INTERVAL_MILLIS.toInt()
+            )
+        ) {}.apply {
+            host = VideoSupportFragmentGlueHost(this@VideoPlaybackFragment)
+            title = selectedMovie?.title
 
-            override fun previous() {
-                if (parentFragmentManager.backStackEntryCount > 0)
-                    parentFragmentManager.popBackStack()
-            }
+            isSeekEnabled = true
         }
-        playerGlue = VideoPlayerGlue(requireContext(), playerAdapter)
-
-        playerGlue.host = VideoSupportFragmentGlueHost(this)
-        playerGlue.addPlayerCallback(object : PlaybackGlue.PlayerCallback() {
-            override fun onPreparedStateChanged(glue: PlaybackGlue?) {
-                if (glue!!.isPrepared) {
-                    playerGlue.seekProvider =
-                        CustomSeekDataProvider(requireContext(), selectedMovie!!.videoUrl, 20000L)
-                }
-            }
-
-            override fun onPlayCompleted(glue: PlaybackGlue?) {
-                playNewMovie(relatedMovieList[0])
-            }
-        })
-        playerGlue.playWhenPrepared()
-        playerGlue.title = selectedMovie?.title
-        playerAdapter.setDataSource(Uri.parse(selectedMovie!!.videoUrl))
     }
+
+    @OptIn(UnstableApi::class)
+    private fun initializePlayer() {
+        exoplayer = ExoPlayer.Builder(requireContext()).build().apply {
+            prepare()
+            val uri = Uri.parse(selectedMovie!!.videoUrl)
+            val mediaItem = MediaItem.fromUri(uri)
+            setMediaItem(mediaItem)
+            prepareGlue(this)
+            play()
+        }
+    }
+
+    private fun destroyPlayer() {
+        exoplayer?.let {
+            it.pause()
+            it.release()
+            exoplayer = null
+        }
+    }
+
+//    private fun setupPlayerGlue() {
+//        val playerAdapter = object : MediaPlayerAdapter(context) {
+//            override fun next() {
+//                playNewMovie(relatedMovieList[0])
+//            }
+//
+//            override fun previous() {
+//                if (parentFragmentManager.backStackEntryCount > 0)
+//                    parentFragmentManager.popBackStack()
+//            }
+//        }
+//        playerGlue = VideoPlayerGlue(requireContext(), playerAdapter)
+//
+//        playerGlue.host = VideoSupportFragmentGlueHost(this)
+//        playerGlue.addPlayerCallback(object : PlaybackGlue.PlayerCallback() {
+//            override fun onPreparedStateChanged(glue: PlaybackGlue?) {
+//                if (glue!!.isPrepared) {
+//                    playerGlue.seekProvider =
+//                        CustomSeekDataProvider(requireContext(), selectedMovie!!.videoUrl, 20000L)
+//                }
+//            }
+//
+//            override fun onPlayCompleted(glue: PlaybackGlue?) {
+//                playNewMovie(relatedMovieList[0])
+//            }
+//        })
+//        playerGlue.playWhenPrepared()
+//        playerGlue.title = selectedMovie?.title
+//        playerAdapter.setDataSource(Uri.parse(selectedMovie!!.videoUrl))
+//    }
 
     @Suppress("DEPRECATION")
     private inline fun <reified T : Serializable> getSerializable(key: String): T? =
@@ -127,21 +160,18 @@ class VideoPlaybackFragment : VideoSupportFragment() {
     override fun onResume() {
         super.onResume()
         showControlsOverlay(false)
-        playerGlue.pause()
         setSelectedPosition(0)
     }
 
     override fun onStop() {
         super.onStop()
-        playerGlue.pause()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        handler.removeCallbacks(hideControlOverlayRunnable)
+        destroyPlayer()
     }
 
     companion object {
+
+        private val PLAYER_UPDATE_INTERVAL_MILLIS = Duration.ofMillis(50).toMillis()
+        private const val MEDIA_SESSION_TAG = "ReferenceAppKotlin"
         fun newInstance(movie: Movie?) = VideoPlaybackFragment().apply {
             arguments = Bundle().apply { putSerializable(ARG_MOVIE, movie) }
         }
